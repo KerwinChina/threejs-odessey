@@ -22,15 +22,17 @@ scene.fog = new THREE.Fog(0x1A1A1A, 1, 1000);
 // 初始化相机
 const camera = new THREE.PerspectiveCamera(40, sizes.width / sizes.height)
 scene.add(camera);
-
 camera.position.set(20, 100, 450);
+
+// 初始化控制器
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
+// 添加环境光
 const light = new THREE.AmbientLight(0xdeedff, 1.5);
 scene.add(light);
 
-// 创建网格对象
+// 创建星球
 const SphereMaterial = new THREE.MeshLambertMaterial({
   color: 0x03c03c,
   wireframe: true,
@@ -39,6 +41,7 @@ const SphereGeometry = new THREE.SphereGeometry(80, 32, 32);
 const planet = new THREE.Mesh(SphereGeometry, SphereMaterial);
 scene.add(planet);
 
+// 创建星球轨道环
 const TorusGeometry = new THREE.TorusBufferGeometry(150, 8, 2, 120);
 const TorusMaterial = new THREE.MeshLambertMaterial({
   color: 0x40a9ff,
@@ -49,13 +52,13 @@ ring.rotation.x = Math.PI / 2;
 ring.rotation.y = -0.1 * (Math.PI / 2);
 scene.add(ring);
 
-const meshList = [];
+// 创建卫星
 const IcoGeometry = new THREE.IcosahedronGeometry(16, 0);
 const IcoMaterial = new THREE.MeshToonMaterial({ color: 0xfffc00 });
-const IcoMesh = new THREE.Mesh(IcoGeometry, IcoMaterial);
-scene.add(IcoMesh);
-meshList.push(IcoMesh);
+const satellite = new THREE.Mesh(IcoGeometry, IcoMaterial);
+scene.add(satellite);
 
+// 创建星星
 const stars = new THREE.Object3D();
 for (let i = 0; i < 500; i++) {
   const geometry = new THREE.IcosahedronGeometry(Math.random() * 2, 0);
@@ -69,7 +72,6 @@ for (let i = 0; i < 500; i++) {
   mesh.rotation.z = Math.random() * 2 * Math.PI;
   stars.add(mesh);
 }
-
 scene.add(stars);
 
 // 页面缩放事件监听
@@ -85,7 +87,6 @@ window.addEventListener('resize', () => {
 });
 
 let rot = 0;
-
 // 动画
 const axis = new THREE.Vector3(0, 0, 1);
 const tick = () => {
@@ -94,17 +95,22 @@ const tick = () => {
   // 给网格模型添加一个转动动画
   rot += Math.random() * 0.8;
   const radian = (rot * Math.PI) / 180;
-  IcoMesh.position.x = 250 * Math.sin(radian);
-  IcoMesh.position.y = 100 * Math.cos(radian);
-  IcoMesh.position.z = -100 * Math.cos(radian);
-  IcoMesh.rotation.x += 0.005;
-  IcoMesh.rotation.y += 0.005;
-  IcoMesh.rotation.z -= 0.005;
-  controls.update();
+  // 星球位置动画
+  planet && (planet.rotation.y += .005);
+  // 星球轨道环位置动画
+  ring && ring.rotateOnAxis(axis, Math.PI / 400);
+  // 卫星位置动画
+  satellite.position.x = 250 * Math.sin(radian);
+  satellite.position.y = 100 * Math.cos(radian);
+  satellite.position.z = -100 * Math.cos(radian);
+  satellite.rotation.x += 0.005;
+  satellite.rotation.y += 0.005;
+  satellite.rotation.z -= 0.005;
+  // 星星动画
   stars.rotation.y += 0.0009;
   stars.rotation.z -= 0.0003;
-  planet && (planet.rotation.y += .005)
-  ring && ring.rotateOnAxis(axis, Math.PI / 400);
+  // 更新控制器
+  controls.update();
   // 页面重绘时调用自身
   window.requestAnimationFrame(tick);
 }
