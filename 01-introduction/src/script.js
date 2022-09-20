@@ -1,5 +1,5 @@
-import './style.css'
-import * as THREE from 'three'
+import './style.css';
+import * as THREE from 'three';
 
 // 定义渲染尺寸
 const sizes = {
