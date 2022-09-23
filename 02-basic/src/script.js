@@ -59,7 +59,7 @@ const satellite = new THREE.Mesh(IcoGeometry, IcoMaterial);
 scene.add(satellite);
 
 // 创建星星
-const stars = new THREE.Object3D();
+const stars = new THREE.Group();
 for (let i = 0; i < 500; i++) {
   const geometry = new THREE.IcosahedronGeometry(Math.random() * 2, 0);
   const material = new THREE.MeshToonMaterial({ color: 0xeeeeee });
