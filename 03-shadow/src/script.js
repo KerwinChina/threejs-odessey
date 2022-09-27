@@ -1,6 +1,10 @@
 import './style.css';
-import * as THREE from 'three';
-import { PerspectiveCamera, sRGBEncoding, WebGLRenderer } from 'three';
+import { Clock, Scene, LoadingManager, WebGLRenderer, sRGBEncoding, Group, PerspectiveCamera, DirectionalLight, PointLight, MeshPhongMaterial } from 'three';
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+var secondContainer = false;
 
 // 定义渲染尺寸
 const sizes = {
@@ -14,8 +18,7 @@ let width = section.clientWidth;
 let height = section.clientHeight;
 
 // 初始化渲染器
-const canvas = document.querySelector('canvas.webgl');
-const renderer = new THREE.WebGLRenderer({
+const renderer = new WebGLRenderer({
   canvas: document.querySelector('#canvas-container'),
   antialias: true,
   alpha: true,
@@ -30,27 +33,28 @@ const renderer2 = new WebGLRenderer({
   canvas: document.querySelector('#canvas-container-details'),
   antialias: false
 });
-renderer2.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+renderer2.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer2.setSize(width, height);
 renderer2.outputEncoding = sRGBEncoding;
 
 // 初始化场景
-const scene = new THREE.Scene();
+const scene = new Scene();
 
 // 初始化相机
-const cameraGroup = new THREE.Group();
+const cameraGroup = new Group();
 scene.add(cameraGroup);
-const camera = new THREE.PerspectiveCamera(35, width / height, 1, 100)
+const camera = new PerspectiveCamera(35, width / height, 1, 100)
 camera.position.set(19, 1.54, -.1);
 cameraGroup.add(camera);
 
-const camera2 = new THREE.PerspectiveCamera(35, section.clientWidth / section.clientWidth, 1, 100);
+const camera2 = new PerspectiveCamera(35, section.clientWidth / section.clientHeight, 1, 100);
 camera2.position.set(3.2, 2.8, 3.2);
 camera2.rotation.set(0, 1, 0);
 scene.add(camera2);
 
 // 页面缩放事件监听
 window.addEventListener('resize', () => {
+  let section = document.getElementsByClassName('section')[0];
   camera.aspect = section.clientWidth / section.clientHeight
   camera.updateProjectionMatrix();
 
@@ -60,34 +64,189 @@ window.addEventListener('resize', () => {
   renderer.setSize(section.clientWidth, section.clientHeight);
   renderer2.setSize(section.clientWidth, section.clientHeight);
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
-  renderer2.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer2.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
 // 直射光
-const sunLight = new THREE.DirectionalLight(0x435c72, .08);
-sunLight.position.set(-100, 0, -100);
-scene.add(sunLight);
+const directionLight = new DirectionalLight(0xffffff, .8);
+directionLight.position.set(-100, 0, -100);
+scene.add(directionLight);
 
 // 点光源
-const fillLight = new THREE.PointLight(0x88b2d9, 2.7, 4, 3);
+const fillLight = new PointLight(0x88ffee, 2.7, 4, 3);
 fillLight.position.set(30, 3, 1.8);
 scene.add(fillLight);
 
 // 加载管理
 const ftsLoader = document.querySelector('.lds-roller');
 const loadingCover = document.getElementById('loading-text-intro');
-const loadingManager = new THREE.LoadingManager();
+const loadingManager = new LoadingManager();
 loadingManager.onLoad = () => {
-  document.querySelector('content').style.visibility = 'visible';
+  document.querySelector('.content').style.visibility = 'visible';
   const yPosition = { y: 0 };
+  new TWEEN.Tween(yPosition).to({ y: 100 }, 900)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .start()
+    .onUpdate(() => { loadingCover.style.setProperty('transform', `translate(0, ${yPosition.y}%)`)})
+    .onComplete(function () {
+      loadingCover.parentNode.removeChild(document.getElementById('loading-text-intro'));
+      TWEEN.remove(this);
+    });
+  introAnimation();
+  ftsLoader.parentNode.removeChild(ftsLoader);
+  window.scroll(0, 0)
 }
 
-// 动画
+// 使用 dracoLoader 加载用blender压缩过的模型
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/');
+dracoLoader.setDecoderConfig({ type: 'js' });
+const loader = new GLTFLoader(loadingManager);
+loader.setDRACOLoader(dracoLoader);
+
+// 模型加载
+loader.load('/models/statue.glb', function (gltf) {
+  gltf.scene.traverse((obj) => {
+    if (obj.isMesh) {
+      oldMaterial = obj.material;
+      obj.material = new MeshPhongMaterial({
+        shininess: 100
+      })
+    }
+  })
+  scene.add(gltf.scene);
+  oldMaterial.dispose();
+  renderer.renderLists.dispose();
+});
+
+// 使用Tween给相机添加入场动画
+function introAnimation() {
+  new TWEEN.Tween(
+    camera.position.set(0, 4, 2))
+    .to({ x: 0, y: 2.4, z: 5.8 }, 3500)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .start()
+    .onComplete(function () {
+      TWEEN.remove(this)
+      document.querySelector('.header').classList.add('ended')
+      document.querySelector('.description').classList.add('ended')
+    })
+}
+
+// 页面点击事件监听
+document.getElementById('aglaea').addEventListener('click', () => {
+  document.getElementById('aglaea').classList.add('active')
+  document.getElementById('euphre').classList.remove('active')
+  document.getElementById('thalia').classList.remove('active')
+  document.getElementById('content').innerHTML = '昨夜西风凋碧树。独上高楼，望尽天涯路。'
+  animateCamera({ x: 3.2, y: 2.8, z: 3.2 }, { y: 1 });
+});
+
+document.getElementById('thalia').addEventListener('click', () => {
+  document.getElementById('thalia').classList.add('active')
+  document.getElementById('aglaea').classList.remove('active')
+  document.getElementById('euphre').classList.remove('active')
+  document.getElementById('content').innerHTML = '衣带渐宽终不悔，为伊消得人憔悴。'
+  animateCamera({ x: -1.4, y: 2.8, z: 4.4 }, { y: -0.1 });
+});
+
+document.getElementById('euphre').addEventListener('click', () => {
+  document.getElementById('euphre').classList.add('active')
+  document.getElementById('aglaea').classList.remove('active')
+  document.getElementById('thalia').classList.remove('active')
+  document.getElementById('content').innerHTML = '众里寻他千百度，蓦然回首，那人却在灯火阑珊处。'
+  animateCamera({ x: -4.8, y: 2.9, z: 3.2 }, { y: -0.75 });
+});
+
+// 相机动画
+function animateCamera(position, rotation) {
+  new TWEEN.Tween(camera2.position)
+    .to(position, 1800)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .start()
+    .onComplete(function () {
+      TWEEN.remove(this)
+    })
+  new TWEEN.Tween(camera2.rotation)
+    .to(rotation, 1800)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .start()
+    .onComplete(function () {
+      TWEEN.remove(this)
+    })
+}
+
+// 鼠标样式配置
+const cursor = {
+  x: 0,
+  y: 0
+}
+const clock = new Clock()
+let previousTime = 0
+
+// 页面重绘动画
 const tick = () => {
-  // 更新渲染器
-  renderer.render(scene, camera);
-  // 页面重绘时调用自身
-  window.requestAnimationFrame(tick);
+  TWEEN.update()
+  if (secondContainer) {
+    renderer2.render(scene, camera2)
+  } else {
+    renderer.render(scene, camera)
+  }
+  const elapsedTime = clock.getElapsedTime()
+  const deltaTime = elapsedTime - previousTime
+  previousTime = elapsedTime
+  const parallaxY = cursor.y
+  fillLight.position.y -= (parallaxY * 9 + fillLight.position.y - 2) * deltaTime
+  const parallaxX = cursor.x
+  fillLight.position.x += (parallaxX * 8 - fillLight.position.x) * 2 * deltaTime
+  cameraGroup.position.z -= (parallaxY / 3 + cameraGroup.position.z) * 2 * deltaTime
+  cameraGroup.position.x += (parallaxX / 3 - cameraGroup.position.x) * 2 * deltaTime
+  requestAnimationFrame(tick);
 }
 tick();
+
+// 鼠标移动时获取相机位置
+document.addEventListener('mousemove', (event) => {
+  event.preventDefault()
+  cursor.x = event.clientX / window.innerWidth - 0.5
+  cursor.y = event.clientY / window.innerHeight - 0.5
+  handleCursor(event)
+}, false)
+
+const customCursor = document.querySelector('.cursor');
+const handleCursor = (e) => {
+  const x = e.clientX
+  const y = e.clientY
+  customCursor.style.cssText = `left: ${x}px; top: ${y}px;`
+}
+
+const handleMenu = () => {
+  const obCallback = payload => {
+    if (payload[0].intersectionRatio > 0.05) {
+      secondContainer = true
+    } else {
+      secondContainer = false
+    }
+  }
+  // 基于容器视图禁用渲染器
+  const ob = new IntersectionObserver(obCallback, { threshold: 0.05 });
+  const watchedSection = document.querySelector('.second');
+  ob.observe(watchedSection);
+  const btn = document.querySelectorAll('nav > .a')
+  function update(e) {
+    const span = this.querySelector('span')
+    if (e.type === 'mouseleave') {
+      span.style.cssText = ''
+    } else {
+      const { offsetX: x, offsetY: y } = e, { offsetWidth: width, offsetHeight: height } = this,
+      walk = 20, xWalk = (x / width) * (walk * 2) - walk, yWalk = (y / height) * (walk * 2) - walk
+      span.style.cssText = `transform: translate(${xWalk}px, ${yWalk}px);`
+    }
+  }
+  // 点击菜单
+  btn.forEach(b => b.addEventListener('mousemove', update));
+  btn.forEach(b => b.addEventListener('mouseleave', update));
+}
+
+handleMenu();

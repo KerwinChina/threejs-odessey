@@ -3,9 +3,17 @@
   padding: 0;
 }
 
+@font-face {
+  font-family: abduction;
+  src: url('../static/fonts/abduction.ttf');
+}
+
 html,
 body {
   overflow: hidden;
+  background: #000000;
+  font-family: abduction;
+  cursor: none;
 }
 
 .shadow_page {
@@ -24,6 +32,11 @@ body {
   bottom: 24px;
   left: 24px;
   z-index: 11;
+  cursor: pointer;
+  transition: opacity .25s ease-in-out;
+}
+.shadow_page .github:hover {
+  opacity: .6;
 }
 .shadow_page .content .section {
   -moz-user-select: none;
@@ -72,17 +85,17 @@ body {
   z-index: 1;
 }
 .shadow_page .content .section.first .info .name {
-  font-size: 1.8em;
-  line-height: 0;
+  font-size: 2em;
   font-weight: 100;
   letter-spacing: 0.25em;
   font-style: italic;
+  color: #03c03c;
 }
 .shadow_page .content .section.first .info .title {
   margin: 10px 0;
   font-weight: 100;
   letter-spacing: 0.4em;
-  font-size: 1.6em;
+  font-size: 1.8em;
 }
 .shadow_page .content .section.first .info .title::after {
   content: "";
@@ -159,21 +172,6 @@ body {
   padding: 0;
   pointer-events: all;
   overflow: hidden;
-}
-.shadow_page .content .section.third {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  text-align: center;
 }
 .lds-roller {
   width: 80px;
@@ -260,7 +258,6 @@ body {
   position: absolute;
   width: 100vw;
   height: 100%;
-  font-family: 'Josefin Sans', sans-serif;
   display: flex;
   align-content: center;
   justify-content: center;
@@ -269,6 +266,7 @@ body {
   font-weight: 100;
   color: #f9f0ec;
   background: radial-gradient(circle at center center, #5d5d5d 0, #090909 58%);
+  font-family: Arial, Helvetica, sans-serif;
 }
 #loading-text-intro.ended {
   transform: translateY(200%);
@@ -303,7 +301,7 @@ span {
   padding: 1rem;
   margin-right: 4rem;
   letter-spacing: 0.4em;
-  font-size: 0.9em;
+  font-size: 1.2em;
   transition: all 0.3s ease, color 0.3s ease;
 }
 nav.header .a:hover {
@@ -363,9 +361,8 @@ nav.header .a:hover~.cursor {
   list-style: none;
   display: inline-flex;
   padding: 0px;
-  margin: 0px 0px 30px 60px;
-  font-family: 'DM Serif Display', serif;
-  color: rgba(255,255,255,0.11);
+  margin: 0px 0px 64px 64px;
+  color: rgba(255,255,255, .11);
   z-index: 2;
 }
 .second-container>ul>li.active:after {
@@ -379,8 +376,9 @@ nav.header .a:hover~.cursor {
   display: block;
 }
 .second-container>ul>li {
-  padding-right: 20px;
-  transition: all 0.8s ease-out;
+  padding-right: 32px;
+  transition: all .8s ease-out;
+  font-size: 1.2em;
 }
 .second-container>ul>li:hover {
   color: #f5f5f5;
@@ -394,52 +392,14 @@ nav.header .a:hover~.cursor {
 .second-container>ul>li.active {
   color: #f5f5f5;
 }
-.second-container>p {
-  font-size: 14px;
-  font-family: sans-serif;
-  line-height: 24px;
+.second-container .text {
+  font-size: 1.4em;
   width: 30%;
-  color: #898989;
+  color: rgba(255, 255, 255, .8);
   margin-left: 60px;
-  height: 200px;
-}
-.third>h1 {
-  font-size: 15vw;
-  font-weight: 100;
-  letter-spacing: -6px;
-  color: #f5f5f5;
-  margin: 40px 0;
-  padding: 0;
-}
-.third>p {
-  column-count: 2;
-  column-gap: 40px;
-  width: 80%;
-  font-size: 13px;
-  font-family: sans-serif;
-  font-weight: 100;
-  line-height: 28px;
-  height: 180px;
-  color: #898989;
-}
-.footer {
-  border: none;
-  width: 100%;
-  margin-bottom: 40px;
-  opacity: 1;
-  font-family: sans-serif;
-  font-size: 7px;
-  transition: all 0.8s ease-out 1.1s;
-  bottom: 0;
-  color: #faebd7;
-  font-weight: 100;
-  opacity: 0.2;
-  text-align: center;
-}
-.footer a {
-  text-decoration: none;
-  pointer-events: auto;
-  color: #faebd7;
+  height: 300px;
+  line-height: 2;
+  letter-spacing: 8px;
 }
 @media only screen and (max-width: 660px) {
   .a {
