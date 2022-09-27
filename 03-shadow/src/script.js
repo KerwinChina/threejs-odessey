@@ -135,26 +135,26 @@ function introAnimation() {
 }
 
 // 页面点击事件监听
-document.getElementById('aglaea').addEventListener('click', () => {
-  document.getElementById('aglaea').classList.add('active')
-  document.getElementById('euphre').classList.remove('active')
-  document.getElementById('thalia').classList.remove('active')
+document.getElementById('one').addEventListener('click', () => {
+  document.getElementById('one').classList.add('active')
+  document.getElementById('three').classList.remove('active')
+  document.getElementById('two').classList.remove('active')
   document.getElementById('content').innerHTML = '昨夜西风凋碧树。独上高楼，望尽天涯路。'
   animateCamera({ x: 3.2, y: 2.8, z: 3.2 }, { y: 1 });
 });
 
-document.getElementById('thalia').addEventListener('click', () => {
-  document.getElementById('thalia').classList.add('active')
-  document.getElementById('aglaea').classList.remove('active')
-  document.getElementById('euphre').classList.remove('active')
+document.getElementById('two').addEventListener('click', () => {
+  document.getElementById('two').classList.add('active')
+  document.getElementById('one').classList.remove('active')
+  document.getElementById('three').classList.remove('active')
   document.getElementById('content').innerHTML = '衣带渐宽终不悔，为伊消得人憔悴。'
   animateCamera({ x: -1.4, y: 2.8, z: 4.4 }, { y: -0.1 });
 });
 
-document.getElementById('euphre').addEventListener('click', () => {
-  document.getElementById('euphre').classList.add('active')
-  document.getElementById('aglaea').classList.remove('active')
-  document.getElementById('thalia').classList.remove('active')
+document.getElementById('three').addEventListener('click', () => {
+  document.getElementById('three').classList.add('active')
+  document.getElementById('one').classList.remove('active')
+  document.getElementById('two').classList.remove('active')
   document.getElementById('content').innerHTML = '众里寻他千百度，蓦然回首，那人却在灯火阑珊处。'
   animateCamera({ x: -4.8, y: 2.9, z: 3.2 }, { y: -0.75 });
 });
