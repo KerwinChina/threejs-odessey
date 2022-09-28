@@ -7,11 +7,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 var secondContainer = false;
 
 // 定义渲染尺寸
-const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight
-}
-
 const section = document.getElementsByClassName('section')[0];
 let oldMaterial;
 let width = section.clientWidth;
@@ -24,7 +19,7 @@ const renderer = new WebGLRenderer({
   alpha: true,
   powerPreference: 'high-performance'
 });
-renderer.setSize(sizes.width, sizes.height);
+renderer.setSize(width, height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.autoClear= true;
 renderer.outputEncoding = sRGBEncoding;
