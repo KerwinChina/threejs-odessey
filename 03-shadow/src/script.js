@@ -85,7 +85,8 @@ const loadingManager = new LoadingManager();
 loadingManager.onLoad = () => {
   document.querySelector('.content').style.visibility = 'visible';
   const yPosition = { y: 0 };
-  new TWEEN.Tween(yPosition).to({ y: 100 }, 900)
+  new TWEEN.Tween(yPosition)
+    .to({ y: 100 }, 900)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .start()
     .onUpdate(() => { loadingCover.style.setProperty('transform', `translate(0, ${yPosition.y}%)`)})
@@ -209,8 +210,8 @@ tick();
 // 鼠标移动时获取相机位置
 document.addEventListener('mousemove', (event) => {
   event.preventDefault()
-  cursor.x = event.clientX / window.innerWidth - 0.5
-  cursor.y = event.clientY / window.innerHeight - 0.5
+  cursor.x = event.clientX / window.innerWidth - .5
+  cursor.y = event.clientY / window.innerHeight - .5
   handleCursor(event)
 }, false)
 
