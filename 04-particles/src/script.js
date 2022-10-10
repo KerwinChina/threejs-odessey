@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // 定义渲染尺寸
 const sizes = {
@@ -17,15 +18,13 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const scene = new THREE.Scene();
 
 // 初始化相机
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.z = 3
+const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 1000)
+camera.position.z = 150
+camera.lookAt(new THREE.Vector3(0, 0, 0))
 scene.add(camera);
 
-// 创建网格对象
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x03c03c });
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
 // 页面缩放事件监听
 window.addEventListener('resize', () => {
@@ -41,12 +40,52 @@ window.addEventListener('resize', () => {
 
 // 动画
 const tick = () => {
+  controls && controls.update();
   // 更新渲染器
   renderer.render(scene, camera);
-  // 给网格模型添加一个转动动画
-  mesh && (mesh.rotation.y += .02);
-  mesh && (mesh.rotation.x += .02);
   // 页面重绘时调用自身
   window.requestAnimationFrame(tick);
 }
 tick();
+
+// 01 使用THREE.Sprite创建粒子
+const createParticlesBySprite = () => {
+  for (let x = -15; x < 15; x++) {
+    for(let y = -10; y < 10; y++) {
+      let material = new THREE.SpriteMaterial({
+        color: Math.random() * 0xffffff
+      });
+      let sprite = new THREE.Sprite(material);
+      sprite.position.set(x * 4, y * 4, 0);
+      scene.add(sprite);
+    }
+  }
+}
+
+// createParticlesBySprite();
+
+const createParticlesByPoints = () => {
+  const geom = new THREE.BufferGeometry();
+  const material = new THREE.PointsMaterial({
+    size: 2,
+    vertexColors: true,
+    color: 0xffffff
+  });
+  let veticsFloat32Array = []
+  let veticsColors = []
+  for (let x = -15; x < 15; x++) {
+    for (let y = -10; y < 10; y++) {
+        veticsFloat32Array.push(x * 4, y * 4, 0)
+        const randomColor = new THREE.Color(Math.random() * 0xffffff)
+        veticsColors.push(randomColor.r, randomColor.g, randomColor.b)
+    }
+  }
+  const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3)
+  const colors = new THREE.Float32BufferAttribute(veticsColors, 3)
+  geom.attributes.position = vertices
+  geom.attributes.color = colors
+  const cloud = new THREE.Points(geom, material)
+  scene.add(cloud)
+}
+
+createParticlesByPoints();
