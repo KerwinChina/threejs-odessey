@@ -1,6 +1,9 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as dat from 'dat.gui';
+
+console.log(dat)
 
 // 定义渲染尺寸
 const sizes = {
@@ -64,6 +67,7 @@ const createParticlesBySprite = () => {
 
 // createParticlesBySprite();
 
+// 02
 const createParticlesByPoints = () => {
   const geom = new THREE.BufferGeometry();
   const material = new THREE.PointsMaterial({
@@ -75,17 +79,87 @@ const createParticlesByPoints = () => {
   let veticsColors = []
   for (let x = -15; x < 15; x++) {
     for (let y = -10; y < 10; y++) {
+        veticsFloat32Array.push(x * 4, y * 4, 0);
+        const randomColor = new THREE.Color(Math.random() * 0xffffff);
+        veticsColors.push(randomColor.r, randomColor.g, randomColor.b);
+    }
+  }
+  const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3);
+  const colors = new THREE.Float32BufferAttribute(veticsColors, 3);
+  geom.attributes.position = vertices;
+  geom.attributes.color = colors;
+  const particles = new THREE.Points(geom, material);
+  scene.add(particles);
+}
+
+// createParticlesByPoints();
+
+// 03 粒子样式化
+const createStyledParticlesByPoints = (ctrls) => {
+  const geom = new THREE.BufferGeometry();
+  const material = new THREE.PointsMaterial({
+    size: ctrls.size,
+    transparent: ctrls.transparent,
+    opacity: ctrls.opacity,
+    color: new THREE.Color(ctrls.color),
+    vertexColors: ctrls.vertexColors,
+    sizeAttenuation: ctrls.sizeAttenuation
+  });
+  let veticsFloat32Array = []
+  let veticsColors = []
+  for (let x = -15; x < 15; x++) {
+    for (let y = -10; y < 10; y++) {
         veticsFloat32Array.push(x * 4, y * 4, 0)
-        const randomColor = new THREE.Color(Math.random() * 0xffffff)
+        const randomColor = new THREE.Color(Math.random() * ctrls.vertexColor)
         veticsColors.push(randomColor.r, randomColor.g, randomColor.b)
     }
   }
   const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3)
   const colors = new THREE.Float32BufferAttribute(veticsColors, 3)
-  geom.attributes.position = vertices
-  geom.attributes.color = colors
-  const cloud = new THREE.Points(geom, material)
-  scene.add(cloud)
+  geom.attributes.position = vertices;
+  geom.attributes.color = colors;
+  const particles = new THREE.Points(geom, material);
+  particles.name = 'particles';
+  scene.add(particles)
 }
 
-createParticlesByPoints();
+const ctrls = new function () {
+  this.size = 5;
+  this.transparent = true;
+  this.opacity = 0.6;
+  this.vertexColors = true;
+  this.color = 0xffffff;
+  this.vertexColor = 0x00ff00;
+  this.sizeAttenuation = true;
+  this.rotate = true;
+  this.redraw = function () {
+    if (scene.getObjectByName("particles")) {
+      scene.remove(scene.getObjectByName("particles"));
+    }
+    createStyledParticlesByPoints({
+      size: ctrls.size,
+      transparent: ctrls.transparent,
+      opacity: ctrls.opacity,
+      vertexColors: ctrls.vertexColors,
+      sizeAttenuation: ctrls.sizeAttenuation,
+      color: ctrls.color,
+      vertexColor: ctrls.vertexColor
+    });
+  };
+}
+const gui = new dat.GUI();
+gui.add(ctrls, 'size', 0, 10).onChange(ctrls.redraw);
+gui.add(ctrls, 'transparent').onChange(ctrls.redraw);
+gui.add(ctrls, 'opacity', 0, 1).onChange(ctrls.redraw);
+gui.add(ctrls, 'vertexColors').onChange(ctrls.redraw);
+gui.addColor(ctrls, 'color').onChange(ctrls.redraw);
+gui.addColor(ctrls, 'vertexColor').onChange(ctrls.redraw);
+gui.add(ctrls, 'sizeAttenuation').onChange(ctrls.redraw);
+gui.hide();
+
+const methods3 = () => {
+  ctrls.redraw();
+  gui.show();
+}
+
+methods3();
