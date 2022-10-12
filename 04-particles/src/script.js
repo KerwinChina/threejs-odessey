@@ -162,6 +162,123 @@ const methods3 = () => {
 }
 // methods3();
 
+// 04 canvasRenderer
+function createCanvasSprites () {
+  const createGhostTexture = () => {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    // the body
+    ctx.translate(-81, -84)
+    ctx.fillStyle = 'orange'
+    ctx.beginPath()
+    ctx.moveTo(83, 116)
+    ctx.lineTo(83, 102)
+    ctx.bezierCurveTo(83, 94, 89, 88, 97, 88)
+    ctx.bezierCurveTo(105, 88, 111, 94, 111, 102)
+    ctx.lineTo(111, 116)
+    ctx.lineTo(106.333, 111.333)
+    ctx.lineTo(101.666, 116)
+    ctx.lineTo(97, 111.333)
+    ctx.lineTo(92.333, 116)
+    ctx.lineTo(87.666, 111.333)
+    ctx.lineTo(83, 116)
+    ctx.fill()
+    // the eyes
+    ctx.fillStyle = 'white'
+    ctx.beginPath()
+    ctx.moveTo(91, 96)
+    ctx.bezierCurveTo(88, 96, 87, 99, 87, 101)
+    ctx.bezierCurveTo(87, 103, 88, 106, 91, 106)
+    ctx.bezierCurveTo(94, 106, 95, 103, 95, 101)
+    ctx.bezierCurveTo(95, 99, 94, 96, 91, 96)
+    ctx.moveTo(103, 96)
+    ctx.bezierCurveTo(100, 96, 99, 99, 99, 101)
+    ctx.bezierCurveTo(99, 103, 100, 106, 103, 106)
+    ctx.bezierCurveTo(106, 106, 107, 103, 107, 101)
+    ctx.bezierCurveTo(107, 99, 106, 96, 103, 96)
+    ctx.fill()
+    // the pupils
+    ctx.fillStyle = 'blue'
+    ctx.beginPath()
+    ctx.arc(101, 102, 2, 0, Math.PI * 2, true)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(89, 102, 2, 0, Math.PI * 2, true)
+    ctx.fill()
+    const texture = new THREE.Texture(canvas)
+    texture.needsUpdate = true
+    return texture
+  }
+
+  // 05 使用纹理样式化粒子
+  const texture = new THREE.TextureLoader().load('/images/heart.png');
+  console.log(texture)
+
+  const createCloud = (size, transparent, opacity, sizeAttenuation, color) => {
+    const geom = new THREE.BufferGeometry()
+    const material = new THREE.PointsMaterial({
+      'size': size,
+      'transparent': transparent,
+      'opacity': opacity,
+      // 'map': createGhostTexture(),
+      'map': texture,
+      'sizeAttenuation': sizeAttenuation,
+      'color': color
+    })
+    let veticsFloat32Array = []
+    const range = 500
+    for (let i = 0; i < 1000; i++) {
+      const particle = new THREE.Vector3(Math.random() * range - range / 2, Math.random() * range - range / 2, Math.random() * range - range / 2)
+      veticsFloat32Array.push(particle.x, particle.y, particle.z)
+    }
+    const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3)
+    geom.attributes.position = vertices
+    const cloud = new THREE.Points(geom, material)
+    console.log(cloud)
+    scene.add(cloud)
+  }
+  createCloud(20, true, 0.6, true, 0xffffff)
+}
+// createCanvasSprites()
+
+
+// 从高级几何体创建 THREE.Points
+// 创建canvas纹理
+function generateSprite() {
+  const canvas = document.createElement('canvas')
+  canvas.width = 16
+  canvas.height = 16
+
+  const context = canvas.getContext('2d')
+  const gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2)
+  gradient.addColorStop(0, 'rgba(255,255,255,1)')
+  gradient.addColorStop(0.2, 'rgba(0,255,255,1)')
+  gradient.addColorStop(0.4, 'rgba(0,0,64,1)')
+  gradient.addColorStop(1, 'rgba(0,0,0,1)')
+
+  context.fillStyle = gradient
+  context.fillRect(0, 0, canvas.width, canvas.height)
+
+  const texture = new THREE.Texture(canvas)
+  texture.needsUpdate = true
+  return texture
+}
+// 创建立方体
+const boxGeometry = new THREE.SphereGeometry( 15, 32, 16 );
+// 创建粒子材质
+const material = new THREE.PointsMaterial({
+  'color': 0xffffff,
+  'size': 3,
+  'transparent': true,
+  'blending': THREE.AdditiveBlending,
+  'map': generateSprite(),
+  'depthWrite': false
+})
+// 创建粒子
+const cloud = new THREE.Points(boxGeometry, material)
+// scene.add(cloud)
+
+
 // final
 const final = () => {
   document.querySelector('.title-zone').style.display = 'block';
