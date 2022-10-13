@@ -18,10 +18,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // 初始化场景
 const scene = new THREE.Scene();
+// scene.background = new THREE.Color(0xf5f5f5);
 
 // 初始化相机
 const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 1000)
-camera.position.z = 150
+camera.position.z = 120
 camera.lookAt(new THREE.Vector3(0, 0, 0))
 scene.add(camera);
 
@@ -48,12 +49,15 @@ const tick = () => {
   // 页面重绘时调用自身
   window.requestAnimationFrame(tick);
 }
-// tick();
+tick();
 
-// 01 使用THREE.Sprite创建粒子
+
+// ------------------------------------------------------------------------------------
+// 〇 使用THREE.Sprite创建粒子
+// ------------------------------------------------------------------------------------
 const createParticlesBySprite = () => {
   for (let x = -15; x < 15; x++) {
-    for(let y = -10; y < 10; y++) {
+    for (let y = -10; y < 10; y++) {
       let material = new THREE.SpriteMaterial({
         color: Math.random() * 0xffffff
       });
@@ -63,14 +67,17 @@ const createParticlesBySprite = () => {
     }
   }
 }
-
+// 需要查看示例时解开注释
 // createParticlesBySprite();
 
-// 02
+
+// ------------------------------------------------------------------------------------
+// ① 使用THREE.Points创建粒子
+// ------------------------------------------------------------------------------------
 const createParticlesByPoints = () => {
   const geom = new THREE.BufferGeometry();
   const material = new THREE.PointsMaterial({
-    size: 2,
+    size: 4,
     vertexColors: true,
     color: 0xffffff
   });
@@ -78,9 +85,9 @@ const createParticlesByPoints = () => {
   let veticsColors = []
   for (let x = -15; x < 15; x++) {
     for (let y = -10; y < 10; y++) {
-        veticsFloat32Array.push(x * 4, y * 4, 0);
-        const randomColor = new THREE.Color(Math.random() * 0xffffff);
-        veticsColors.push(randomColor.r, randomColor.g, randomColor.b);
+      veticsFloat32Array.push(x * 4, y * 4, 0);
+      const randomColor = new THREE.Color(Math.random() * 0xffffff);
+      veticsColors.push(randomColor.r, randomColor.g, randomColor.b);
     }
   }
   const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3);
@@ -90,10 +97,13 @@ const createParticlesByPoints = () => {
   const particles = new THREE.Points(geom, material);
   scene.add(particles);
 }
-
+// 需要查看示例时解开注释
 // createParticlesByPoints();
 
-// 03 粒子样式化
+
+// ------------------------------------------------------------------------------------
+// ② 创建样式化的粒子
+// ------------------------------------------------------------------------------------
 const createStyledParticlesByPoints = (ctrls) => {
   const geom = new THREE.BufferGeometry();
   const material = new THREE.PointsMaterial({
@@ -108,9 +118,9 @@ const createStyledParticlesByPoints = (ctrls) => {
   let veticsColors = []
   for (let x = -15; x < 15; x++) {
     for (let y = -10; y < 10; y++) {
-        veticsFloat32Array.push(x * 4, y * 4, 0)
-        const randomColor = new THREE.Color(Math.random() * ctrls.vertexColor)
-        veticsColors.push(randomColor.r, randomColor.g, randomColor.b)
+      veticsFloat32Array.push(x * 4, y * 4, 0)
+      const randomColor = new THREE.Color(Math.random() * ctrls.vertexColor)
+      veticsColors.push(randomColor.r, randomColor.g, randomColor.b)
     }
   }
   const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3)
@@ -121,7 +131,7 @@ const createStyledParticlesByPoints = (ctrls) => {
   particles.name = 'particles';
   scene.add(particles)
 }
-
+// 创建属性控制器
 const ctrls = new function () {
   this.size = 5;
   this.transparent = true;
@@ -155,64 +165,42 @@ gui.addColor(ctrls, 'color').onChange(ctrls.redraw);
 gui.addColor(ctrls, 'vertexColor').onChange(ctrls.redraw);
 gui.add(ctrls, 'sizeAttenuation').onChange(ctrls.redraw);
 gui.hide();
+// 需要查看示例时解开注释
+// ctrls.redraw();
+// gui.show();
 
-const methods3 = () => {
-  ctrls.redraw();
-  gui.show();
-}
-// methods3();
 
-// 04 canvasRenderer
-function createCanvasSprites () {
-  const createGhostTexture = () => {
+// ------------------------------------------------------------------------------------
+// ③ 使用canvas样式化粒子
+// ------------------------------------------------------------------------------------
+const createParticlesByCanvas = () => {
+  // 使用canvas创建贴图
+  const createCanvasTexture = () => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    // the body
-    ctx.translate(-81, -84)
-    ctx.fillStyle = 'orange'
-    ctx.beginPath()
-    ctx.moveTo(83, 116)
-    ctx.lineTo(83, 102)
-    ctx.bezierCurveTo(83, 94, 89, 88, 97, 88)
-    ctx.bezierCurveTo(105, 88, 111, 94, 111, 102)
-    ctx.lineTo(111, 116)
-    ctx.lineTo(106.333, 111.333)
-    ctx.lineTo(101.666, 116)
-    ctx.lineTo(97, 111.333)
-    ctx.lineTo(92.333, 116)
-    ctx.lineTo(87.666, 111.333)
-    ctx.lineTo(83, 116)
-    ctx.fill()
-    // the eyes
-    ctx.fillStyle = 'white'
-    ctx.beginPath()
-    ctx.moveTo(91, 96)
-    ctx.bezierCurveTo(88, 96, 87, 99, 87, 101)
-    ctx.bezierCurveTo(87, 103, 88, 106, 91, 106)
-    ctx.bezierCurveTo(94, 106, 95, 103, 95, 101)
-    ctx.bezierCurveTo(95, 99, 94, 96, 91, 96)
-    ctx.moveTo(103, 96)
-    ctx.bezierCurveTo(100, 96, 99, 99, 99, 101)
-    ctx.bezierCurveTo(99, 103, 100, 106, 103, 106)
-    ctx.bezierCurveTo(106, 106, 107, 103, 107, 101)
-    ctx.bezierCurveTo(107, 99, 106, 96, 103, 96)
-    ctx.fill()
-    // the pupils
-    ctx.fillStyle = 'blue'
-    ctx.beginPath()
-    ctx.arc(101, 102, 2, 0, Math.PI * 2, true)
-    ctx.fill()
-    ctx.beginPath()
-    ctx.arc(89, 102, 2, 0, Math.PI * 2, true)
-    ctx.fill()
-    const texture = new THREE.Texture(canvas)
+    canvas.width = 300
+    canvas.height = 300
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(170, 120);
+    var grd = ctx.createLinearGradient(0, 0, 170, 0);
+    grd.addColorStop('0', 'black');
+    grd.addColorStop('0.3', 'magenta');
+    grd.addColorStop('0.5', 'blue');
+    grd.addColorStop('0.6', 'green');
+    grd.addColorStop('0.8', 'yellow');
+    grd.addColorStop(1, 'red');
+    ctx.strokeStyle = grd;
+    ctx.arc(120, 120, 50, 0, Math.PI * 2);
+    ctx.stroke();
+    const texture = new THREE.CanvasTexture(canvas)
     texture.needsUpdate = true
     return texture
   }
-
-  // 05 使用纹理样式化粒子
+  // ----------------------------------------------------------------------------------
+  // ④ 使用纹理样式化粒子
+  // ----------------------------------------------------------------------------------
   const texture = new THREE.TextureLoader().load('/images/heart.png');
-  console.log(texture)
 
   const createCloud = (size, transparent, opacity, sizeAttenuation, color) => {
     const geom = new THREE.BufferGeometry()
@@ -220,69 +208,78 @@ function createCanvasSprites () {
       'size': size,
       'transparent': transparent,
       'opacity': opacity,
-      // 'map': createGhostTexture(),
+      // 'map': createCanvasTexture(),
       'map': texture,
       'sizeAttenuation': sizeAttenuation,
-      'color': color
+      'color': color,
+      depthTest: true,
+      depthWrite: false
     })
     let veticsFloat32Array = []
     const range = 500
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 400; i++) {
       const particle = new THREE.Vector3(Math.random() * range - range / 2, Math.random() * range - range / 2, Math.random() * range - range / 2)
       veticsFloat32Array.push(particle.x, particle.y, particle.z)
     }
     const vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3)
     geom.attributes.position = vertices
-    const cloud = new THREE.Points(geom, material)
-    console.log(cloud)
-    scene.add(cloud)
+    const particles = new THREE.Points(geom, material)
+    scene.add(particles)
   }
-  createCloud(20, true, 0.6, true, 0xffffff)
+  createCloud(40, true, 1, true, 0xffffff)
 }
-// createCanvasSprites()
+// 需要查看示例时解开注释
+// createParticlesByCanvas();
 
 
-// 从高级几何体创建 THREE.Points
-// 创建canvas纹理
-function generateSprite() {
-  const canvas = document.createElement('canvas')
-  canvas.width = 16
-  canvas.height = 16
-
-  const context = canvas.getContext('2d')
-  const gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2)
-  gradient.addColorStop(0, 'rgba(255,255,255,1)')
-  gradient.addColorStop(0.2, 'rgba(0,255,255,1)')
-  gradient.addColorStop(0.4, 'rgba(0,0,64,1)')
-  gradient.addColorStop(1, 'rgba(0,0,0,1)')
-
-  context.fillStyle = gradient
-  context.fillRect(0, 0, canvas.width, canvas.height)
-
-  const texture = new THREE.Texture(canvas)
-  texture.needsUpdate = true
-  return texture
+// ------------------------------------------------------------------------------------
+// ⑤ 从高级几何体创建粒子
+// ------------------------------------------------------------------------------------
+const createParticlesByGeometry = () => {
+  const generateSprite = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    const context = canvas.getContext('2d');
+    const gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    gradient.addColorStop(0.2, 'rgba(0, 255, 0, 1)');
+    gradient.addColorStop(0.4, 'rgba(0, 120, 20, 1)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 1)');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    const texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+    return texture;
+  }
+  // 创建立方体
+  const sphereGeometry = new THREE.SphereGeometry(15, 32, 16);
+  // 创建粒子材质
+  const material = new THREE.PointsMaterial({
+    'color': 0xffffff,
+    'size': 3,
+    'transparent': true,
+    'blending': THREE.AdditiveBlending,
+    'map': generateSprite(),
+    'depthWrite': false
+  })
+  // 创建粒子
+  const particles = new THREE.Points(sphereGeometry, material)
+  scene.add(particles)
 }
-// 创建立方体
-const boxGeometry = new THREE.SphereGeometry( 15, 32, 16 );
-// 创建粒子材质
-const material = new THREE.PointsMaterial({
-  'color': 0xffffff,
-  'size': 3,
-  'transparent': true,
-  'blending': THREE.AdditiveBlending,
-  'map': generateSprite(),
-  'depthWrite': false
-})
-// 创建粒子
-const cloud = new THREE.Points(boxGeometry, material)
-// scene.add(cloud)
+// 需要查看示例时解开注释
+// createParticlesByGeometry();
 
 
-// final
-const final = () => {
+// ------------------------------------------------------------------------------------
+// ⑤ 迷失太空
+// ------------------------------------------------------------------------------------
+const lostInSpace = () => {
   document.querySelector('.title-zone').style.display = 'block';
   controls.dispose();
+  camera.position.z = 150;
+
+  // 从此处正式开始
   const rand = (min, max) => min + Math.random() * (max - min);
   const P_COUNT = 1000;
   let astronaut = null, t = 0;
@@ -313,7 +310,6 @@ const final = () => {
   geom.attributes.color = colors;
   const particleSystem = new THREE.Points(geom, material);
   scene.add(particleSystem);
-
   // 宇航员模型
   const loader = new GLTFLoader();
   loader.load('/models/astronaut.glb', mesh => {
@@ -323,48 +319,41 @@ const final = () => {
     astronaut.position.z = -10;
     scene.add(astronaut);
   });
-
   // 设置光照
   let light = new THREE.PointLight(0xFFFFFF, 0.5);
   light.position.x = -50;
   light.position.y = -50;
   light.position.z = 75;
   scene.add(light);
-
   light = new THREE.PointLight(0xFFFFFF, 0.5);
   light.position.x = 50;
   light.position.y = 50;
   light.position.z = 75;
   scene.add(light);
-
   light = new THREE.PointLight(0xFFFFFF, 0.3);
   light.position.x = 25;
   light.position.y = 50;
   light.position.z = 200;
   scene.add(light);
-
   light = new THREE.AmbientLight(0xFFFFFF, 0.02);
   scene.add(light);
-
+  // 更新粒子
   function updateParticles() {
     particleSystem.position.x = 0.2 * Math.cos(t);
     particleSystem.position.y = 0.2 * Math.cos(t);
     particleSystem.rotation.z += 0.015;
     camera.lookAt(particleSystem.position);
-
-    for (let i=0; i<veticsFloat32Array.length; i++) {
-      if ((i+1) % 3 === 0) {
-        const dist = veticsFloat32Array[i] -camera.position.z;
+    for (let i = 0; i < veticsFloat32Array.length; i++) {
+      if ((i + 1) % 3 === 0) {
+        const dist = veticsFloat32Array[i] - camera.position.z;
         if (dist >= 0) veticsFloat32Array[i] = rand(-1000, -500);
         veticsFloat32Array[i] += 2.5;
         const _vertices = new THREE.Float32BufferAttribute(veticsFloat32Array, 3);
         geom.attributes.position = _vertices;
       }
     }
-
     particleSystem.geometry.verticesNeedUpdate = true;
   }
-
   function updateMeshes() {
     if (astronaut) {
       astronaut.position.z = 0.08 * Math.sin(t) + (camera.position.z - 0.2);
@@ -373,7 +362,6 @@ const final = () => {
       astronaut.rotation.z += 0.01;
     }
   }
-
   function updateRendererDim() {
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
@@ -384,7 +372,6 @@ const final = () => {
       camera.updateProjectionMatrix();
     }
   }
-
   function render() {
     updateParticles();
     updateMeshes();
@@ -393,7 +380,6 @@ const final = () => {
     requestAnimationFrame(render);
     t += 0.01;
   }
-
   window.addEventListener('mousemove', e => {
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight / 2;
@@ -406,5 +392,5 @@ const final = () => {
   });
   render();
 }
-
-final();
+// 查看其他示例时可以注释掉该方法
+lostInSpace();
