@@ -1,7 +1,7 @@
 import './style.css';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // 定义渲染尺寸
@@ -174,7 +174,7 @@ gui.hide();
 // ③ 使用canvas样式化粒子
 // ------------------------------------------------------------------------------------
 const createParticlesByCanvas = () => {
-  // 使用canvas创建贴图
+  // 使用canvas创建纹理
   const createCanvasTexture = () => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -217,7 +217,7 @@ const createParticlesByCanvas = () => {
     })
     let veticsFloat32Array = []
     const range = 500
-    for (let i = 0; i < 400; i++) {
+    for (let i = 0; i < 500; i++) {
       const particle = new THREE.Vector3(Math.random() * range - range / 2, Math.random() * range - range / 2, Math.random() * range - range / 2)
       veticsFloat32Array.push(particle.x, particle.y, particle.z)
     }
@@ -272,7 +272,7 @@ const createParticlesByGeometry = () => {
 
 
 // ------------------------------------------------------------------------------------
-// ⑤ 迷失太空
+// ⑥ 迷失太空
 // ------------------------------------------------------------------------------------
 const lostInSpace = () => {
   document.querySelector('.title-zone').style.display = 'block';
@@ -281,10 +281,18 @@ const lostInSpace = () => {
 
   // 从此处正式开始
   const rand = (min, max) => min + Math.random() * (max - min);
-  const P_COUNT = 1000;
   let astronaut = null, t = 0;
-  // 雾化效果
-  scene.fog = new THREE.FogExp2(0x000000, 0.005);
+
+  // 宇航员模型
+  const loader = new GLTFLoader();
+  loader.load('/models/astronaut.glb', mesh => {
+    astronaut = mesh.scene;
+    astronaut.material = new THREE.MeshLambertMaterial();
+    astronaut.scale.set(.0005, .0005, .0005);
+    astronaut.position.z = -10;
+    scene.add(astronaut);
+  });
+
   // 初始化粒子系统
   const geom = new THREE.BufferGeometry();
   const material = new THREE.PointsMaterial({
@@ -295,7 +303,7 @@ const lostInSpace = () => {
   });
   let veticsFloat32Array = []
   let veticsColors = []
-  for (let p = 0; p < P_COUNT; p++) {
+  for (let p = 0; p < 1000; p++) {
     veticsFloat32Array.push(
       rand(20, 30) * Math.cos(p),
       rand(20, 30) * Math.sin(p),
@@ -310,15 +318,9 @@ const lostInSpace = () => {
   geom.attributes.color = colors;
   const particleSystem = new THREE.Points(geom, material);
   scene.add(particleSystem);
-  // 宇航员模型
-  const loader = new GLTFLoader();
-  loader.load('/models/astronaut.glb', mesh => {
-    astronaut = mesh.scene;
-    astronaut.material = new THREE.MeshLambertMaterial();
-    astronaut.scale.set(.0005, .0005, .0005);
-    astronaut.position.z = -10;
-    scene.add(astronaut);
-  });
+
+  // 雾化效果
+  scene.fog = new THREE.FogExp2(0x000000, 0.005);
   // 设置光照
   let light = new THREE.PointLight(0xFFFFFF, 0.5);
   light.position.x = -50;
