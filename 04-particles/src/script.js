@@ -202,16 +202,16 @@ const createParticlesByCanvas = () => {
   // ----------------------------------------------------------------------------------
   const texture = new THREE.TextureLoader().load('/images/heart.png');
 
-  const createCloud = (size, transparent, opacity, sizeAttenuation, color) => {
+  const createParticles = (size, transparent, opacity, sizeAttenuation, color) => {
     const geom = new THREE.BufferGeometry()
     const material = new THREE.PointsMaterial({
-      'size': size,
-      'transparent': transparent,
-      'opacity': opacity,
+      size: size,
+      transparent: transparent,
+      opacity: opacity,
       // 'map': createCanvasTexture(),
-      'map': texture,
-      'sizeAttenuation': sizeAttenuation,
-      'color': color,
+      map: texture,
+      sizeAttenuation: sizeAttenuation,
+      color: color,
       depthTest: true,
       depthWrite: false
     })
@@ -226,7 +226,7 @@ const createParticlesByCanvas = () => {
     const particles = new THREE.Points(geom, material)
     scene.add(particles)
   }
-  createCloud(40, true, 1, true, 0xffffff)
+  createParticles(40, true, 1, true, 0xffffff)
 }
 // 需要查看示例时解开注释
 // createParticlesByCanvas();
@@ -340,7 +340,7 @@ const lostInSpace = () => {
   light = new THREE.AmbientLight(0xFFFFFF, 0.02);
   scene.add(light);
   // 更新粒子
-  function updateParticles() {
+  const updateParticles = () => {
     particleSystem.position.x = 0.2 * Math.cos(t);
     particleSystem.position.y = 0.2 * Math.cos(t);
     particleSystem.rotation.z += 0.015;
@@ -356,7 +356,7 @@ const lostInSpace = () => {
     }
     particleSystem.geometry.verticesNeedUpdate = true;
   }
-  function updateMeshes() {
+  const updateMeshes = () => {
     if (astronaut) {
       astronaut.position.z = 0.08 * Math.sin(t) + (camera.position.z - 0.2);
       astronaut.rotation.x += 0.015;
@@ -364,7 +364,7 @@ const lostInSpace = () => {
       astronaut.rotation.z += 0.01;
     }
   }
-  function updateRendererDim() {
+  const updateRenderer = () => {
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const needResize = canvas.width !== width || canvas.height !== height;
@@ -374,25 +374,26 @@ const lostInSpace = () => {
       camera.updateProjectionMatrix();
     }
   }
-  function render() {
+  const tick = () => {
     updateParticles();
     updateMeshes();
-    updateRendererDim();
+    updateRenderer();
     renderer.render(scene, camera);
-    requestAnimationFrame(render);
+    requestAnimationFrame(tick);
     t += 0.01;
   }
+  tick();
+
   window.addEventListener('mousemove', e => {
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight / 2;
     const dx = -1 * ((cx - e.clientX) / cx);
     const dy = -1 * ((cy - e.clientY) / cy);
-    camera.position.x = dx * 5;
-    camera.position.y = dy * 5;
-    astronaut.position.x = dx * 5;
-    astronaut.position.y = dy * 5;
+    camera && (camera.position.x = dx * 5);
+    camera && (camera.position.y = dy * 5);
+    astronaut && (astronaut.position.x = dx * 5);
+    astronaut && (astronaut.position.y = dy * 5);
   });
-  render();
 }
 // 查看其他示例时可以注释掉该方法
 lostInSpace();
