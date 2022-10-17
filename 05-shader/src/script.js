@@ -1,10 +1,14 @@
 import './style.css';
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+// 官方的 UnrealBloomPass 有问题，会导致scene背景设置失效
+// import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { UnrealBloomPass } from './libs/UnrealBloompass';
 import portalVertexShader from './shaders/portal/vertex.glsl';
 import portalFragmentShader from './shaders/portal/fragment.glsl';
 
@@ -19,17 +23,18 @@ const canvas = document.querySelector('canvas.webgl');
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true,
-  autoClear: false
+  alpha: true
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.autoClear = false;
+renderer.setClearAlpha(0);
 
 // 初始化场景
 const scene = new THREE.Scene();
-
 // 初始化相机
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000)
-camera.position.z = 3;
+camera.position.set(0, 1, 5);
 scene.add(camera);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -73,10 +78,22 @@ colors.addColor(options, 'color3').name('layer3');
 colors.addColor(options, 'color4').name('layer4');
 colors.addColor(options, 'color5').name('layer5');
 colors.open();
+gui.hide();
+
+// 辉光效果
+const renderScene = new RenderPass(scene, camera);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, .4, .85);
+bloomPass.threshold = options.bloomThreshold;
+bloomPass.strength = options.bloomStrength;
+bloomPass.radius = options.bloomRadius;
+const bloomComposer = new EffectComposer(renderer);
+bloomComposer.renderToScreen = true;
+bloomComposer.addPass(renderScene);
+bloomComposer.addPass(bloomPass);
 
 const textureLoader = new THREE.TextureLoader();
 // 创建网格
-const portalGeometry = new THREE.PlaneBufferGeometry(5, 5, 1, 1);
+const portalGeometry = new THREE.PlaneBufferGeometry(8, 8, 1, 1);
 const portalMaterial = new THREE.ShaderMaterial({
   uniforms: {
     time: {
@@ -124,24 +141,10 @@ const portalMaterial = new THREE.ShaderMaterial({
   fragmentShader: portalFragmentShader,
   vertexShader: portalVertexShader
 });
-const plane = new THREE.Mesh(portalGeometry, portalMaterial);
-scene.add(plane);
+const portal = new THREE.Mesh(portalGeometry, portalMaterial);
+portal.layers.set(1);
+scene.add(portal);
 
-// 辉光效果
-const renderScene = new RenderPass(scene, camera);
-const bloomPass = new UnrealBloomPass(
-  new THREE.Vector2(window.innerWidth, window.innerHeight),
-  1.5,
-  .4,
-  .85
-);
-bloomPass.threshold = options.bloomThreshold;
-bloomPass.strength = options.bloomStrength;
-bloomPass.radius = options.bloomRadius;
-
-const composer = new EffectComposer(renderer);
-composer.addPass(renderScene);
-composer.addPass(bloomPass);
 
 // 更新材质
 const updateShaderMaterial = deltaTime => {
@@ -154,13 +157,44 @@ const updateShaderMaterial = deltaTime => {
   portalMaterial.uniforms.color0.value = new THREE.Vector3(...options.color0);
 }
 
+// 光照
+const light = new THREE.AmbientLight(0xffffff, 1.2);
+scene.add(light);
+
+// 加载管理
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onLoad = () => {}
+
+// 使用 dracoLoader 加载用blender压缩过的模型
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/');
+dracoLoader.setDecoderConfig({ type: 'js' });
+const loader = new GLTFLoader(loadingManager);
+loader.setDRACOLoader(dracoLoader);
+
+// 加载模型
+loader.load('/models/rickAndMorty.glb', mesh => {
+  if (mesh.scene) {
+    mesh.scene.scale.set(.02, .02, .02);
+    mesh.scene.position.x = -.5;
+    mesh.scene.rotation.y = Math.PI;
+    mesh.scene.layers.set(0);
+    scene.add(mesh.scene);
+  }
+});
+
 // 动画
 const tick = deltaTime => {
   updateShaderMaterial(deltaTime);
-  // 更新渲染器
+
+  renderer.clear();
+  camera.layers.set(1);
+  bloomComposer.render();
+
+  renderer.clearDepth();
+  camera.layers.set(0);
   renderer.render(scene, camera);
   // 页面重绘时调用自身
   window.requestAnimationFrame(tick);
-  composer.render();
 }
 tick();
