@@ -11,6 +11,9 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { UnrealBloomPass } from './libs/UnrealBloompass';
 import portalVertexShader from './shaders/portal/vertex.glsl';
 import portalFragmentShader from './shaders/portal/fragment.glsl';
+// test shader
+import testVertexShader from './shaders/test/vertex.glsl';
+import testFragmentShader from './shaders/test/fragment.glsl';
 
 // 定义渲染尺寸
 const sizes = {
@@ -34,7 +37,8 @@ renderer.setClearAlpha(0);
 const scene = new THREE.Scene();
 // 初始化相机
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000)
-camera.position.set(0, 1, 5);
+// camera.position.set(0, 1, 5);
+camera.position.set(1, -1, 5.5);
 scene.add(camera);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -51,6 +55,21 @@ window.addEventListener('resize', () => {
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
 });
+
+
+const testGeometry = new THREE.PlaneBufferGeometry(7.2, 7.2, 1, 1);
+const testMaterial = new THREE.ShaderMaterial({
+  vertexShader: testVertexShader,
+  fragmentShader: testFragmentShader,
+  side: THREE.DoubleSide
+});
+const testMesh = new THREE.Mesh(testGeometry, testMaterial);
+scene.add(testMesh);
+
+testMesh.position.x = -.5;
+testMesh.position.y = .5;
+
+
 
 var options = {
   exposure: 2.8,
@@ -143,7 +162,7 @@ const portalMaterial = new THREE.ShaderMaterial({
 });
 const portal = new THREE.Mesh(portalGeometry, portalMaterial);
 portal.layers.set(1);
-scene.add(portal);
+// scene.add(portal);
 
 
 // 更新材质
@@ -179,7 +198,7 @@ loader.load('/models/rickAndMorty.glb', mesh => {
     mesh.scene.position.x = -.5;
     mesh.scene.rotation.y = Math.PI;
     mesh.scene.layers.set(0);
-    scene.add(mesh.scene);
+    // scene.add(mesh.scene);
   }
 });
 
