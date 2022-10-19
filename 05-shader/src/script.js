@@ -47,11 +47,12 @@ const testMaterial = new THREE.ShaderMaterial({
   side: THREE.DoubleSide
 });
 const testMesh = new THREE.Mesh(testGeometry, testMaterial);
-testMesh.scale.set(1.2, 1.2, 1.2);
 scene.add(testMesh);
 
 // 动画
 const tick = () => {
+  testMesh && (testMesh.rotation.y += .004);
+  controls && controls.update();
   renderer.render(scene, camera);
   // 页面重绘时调用自身
   window.requestAnimationFrame(tick);
