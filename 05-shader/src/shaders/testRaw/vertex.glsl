@@ -1,3 +1,10 @@
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+
+attribute vec3 position;
+attribute vec2 uv;
+
 uniform vec2 uFrequency;
 uniform float uTime;
 

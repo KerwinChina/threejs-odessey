@@ -1,6 +1,11 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as dat from 'dat.gui';
+// rawShader
+// import testVertexShader from './shaders/testRaw/vertex.glsl';
+// import testFragmentShader from './shaders/testRaw/fragment.glsl';
+// shader
 import testVertexShader from './shaders/test/vertex.glsl';
 import testFragmentShader from './shaders/test/fragment.glsl';
 
@@ -40,21 +45,64 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-const testGeometry = new THREE.PlaneBufferGeometry(1, 1, 32, 32);
-const testMaterial = new THREE.ShaderMaterial({
+const geometry = new THREE.PlaneBufferGeometry(1, 1, 32, 32);
+const count = geometry.attributes.position.count;
+const randoms = new Float32Array(count);
+
+for(let i = 0; i < count; i++) {
+    randoms[i] = Math.random();
+}
+
+geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
+
+const textureLoader = new THREE.TextureLoader();
+
+// 原始着色器材质 RawShaderMaterial
+// const material = new THREE.RawShaderMaterial({
+//   side: THREE.DoubleSide,
+//   vertexShader: testVertexShader,
+//   fragmentShader: testFragmentShader,
+//   uniforms: {
+//     uFrequency: { value: new THREE.Vector2(10, 5) },
+//     uTime: { value: 0 },
+//     uColor: { value: new THREE.Color('orange') },
+//     uTexture: { value: textureLoader.load('/images/flag.png') }
+//   }
+// });
+
+// 着色器材质 ShaderMaterial
+const material = new THREE.ShaderMaterial({
+  side: THREE.DoubleSide,
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
-  side: THREE.DoubleSide
+  uniforms: {
+    uFrequency: { value: new THREE.Vector2(10, 5) },
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color('orange') },
+    uTexture: { value: textureLoader.load('/images/flag.png') }
+  }
 });
-const testMesh = new THREE.Mesh(testGeometry, testMaterial);
-scene.add(testMesh);
+
+// Mesh
+const mesh = new THREE.Mesh(geometry, material)
+mesh.scale.y = 2 / 3
+scene.add(mesh)
+
+const gui = new dat.GUI();
+gui.add(material.uniforms.uFrequency.value, 'x').min(0).max(20).step(0.01).name('frequencyX')
+gui.add(material.uniforms.uFrequency.value, 'y').min(0).max(20).step(0.01).name('frequencyY')
 
 // 动画
+const clock = new THREE.Clock();
 const tick = () => {
-  testMesh && (testMesh.rotation.y += .004);
-  controls && controls.update();
+  const elapsedTime = clock.getElapsedTime();
+  // Update material
+  material.uniforms.uTime.value = elapsedTime;
+  // Update controls
+  controls.update();
+  // Render
   renderer.render(scene, camera);
-  // 页面重绘时调用自身
+  // Call tick again on the next frame
   window.requestAnimationFrame(tick);
 }
 tick();
