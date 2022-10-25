@@ -1,8 +1,8 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import testVertexShader from './shaders/test/vertex.glsl';
-import testFragmentShader from './shaders/test/fragment.glsl';
+import testVertexShader from './shaders/pattern/vertex.glsl';
+import testFragmentShader from './shaders/pattern/fragment.glsl';
 
 // 定义渲染尺寸
 const sizes = {
