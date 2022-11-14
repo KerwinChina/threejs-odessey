@@ -29,6 +29,9 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.autoClear = false;
 renderer.setClearAlpha(0);
+renderer.physicallyCorrectLights = true;
+renderer.toneMapping = THREE.CineonToneMapping;
+renderer.toneMappingExposure = 2;
 
 // 初始化场景
 const scene = new THREE.Scene();
@@ -37,8 +40,23 @@ const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 
 camera.position.set(0, 1, 5);
 scene.add(camera);
 
+const directionalLight = new THREE.DirectionalLight('#ffffff', 4)
+directionalLight.castShadow = true
+directionalLight.shadow.camera.far = 15
+directionalLight.shadow.mapSize.set(1024, 1024)
+directionalLight.shadow.normalBias = 0.05
+directionalLight.position.set(.25, 3, -1.25)
+scene.add(directionalLight)
+
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+controls.enablePan = false;
+// 最大仰角
+controls.minPolarAngle = .5;
+controls.maxPolarAngle = 2.5;
+// 水平旋转角度限制
+controls.minAzimuthAngle = -1;
+controls.maxAzimuthAngle = 1;
 
 // 页面缩放事件监听
 window.addEventListener('resize', () => {
@@ -52,6 +70,7 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
+// 设置后期效果
 var options = {
   exposure: 2.8,
   bloomStrength: 2.39,
@@ -172,6 +191,7 @@ const loader = new GLTFLoader(loadingManager);
 loader.setDRACOLoader(dracoLoader);
 
 // 加载模型
+let model = null;
 loader.load('/models/rickAndMorty.glb', mesh => {
   if (mesh.scene) {
     mesh.scene.scale.set(.02, .02, .02);
@@ -179,10 +199,12 @@ loader.load('/models/rickAndMorty.glb', mesh => {
     mesh.scene.rotation.y = Math.PI;
     mesh.scene.layers.set(0);
     scene.add(mesh.scene);
+    model = mesh.scene;
   }
 });
 
 // 动画
+const clock = new THREE.Clock()
 const tick = deltaTime => {
   updateShaderMaterial(deltaTime);
 
@@ -193,7 +215,20 @@ const tick = deltaTime => {
   renderer.clearDepth();
   camera.layers.set(0);
   renderer.render(scene, camera);
+
+  const elapsedTime = clock.getElapsedTime()
+  const ghost1Angle = elapsedTime * 0.5
+  if (model) {
+    model.rotation.x = Math.cos(ghost1Angle) * .2
+    model.rotation.z = Math.sin(ghost1Angle) * .1
+    model.position.z += Math.cos(ghost1Angle) * .005
+  }
+
+  const scale = Math.cos(ghost1Angle) * 2 + 3;
+  portal && portal.scale.set(scale, scale, scale);
+
   // 页面重绘时调用自身
+  controls && controls.update();
   window.requestAnimationFrame(tick);
 }
-// tick();
+tick();
