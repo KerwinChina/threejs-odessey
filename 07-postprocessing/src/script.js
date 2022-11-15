@@ -38,15 +38,6 @@ const scene = new THREE.Scene();
 // 初始化相机
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000)
 camera.position.set(0, 1, 5);
-scene.add(camera);
-
-const directionalLight = new THREE.DirectionalLight('#ffffff', 4)
-directionalLight.castShadow = true
-directionalLight.shadow.camera.far = 15
-directionalLight.shadow.mapSize.set(1024, 1024)
-directionalLight.shadow.normalBias = 0.05
-directionalLight.position.set(.25, 3, -1.25)
-scene.add(directionalLight)
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -70,8 +61,20 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
+// 光照
+const light = new THREE.AmbientLight(0xffffff, 1.2);
+scene.add(light);
+
+const directionalLight = new THREE.DirectionalLight('#ffffff', 4);
+directionalLight.castShadow = true;
+directionalLight.shadow.camera.far = 15;
+directionalLight.shadow.mapSize.set(1024, 1024);
+directionalLight.shadow.normalBias = 0.05;
+directionalLight.position.set(.25, 3, -1.25);
+scene.add(directionalLight);
+
 // 设置后期效果
-var options = {
+const options = {
   exposure: 2.8,
   bloomStrength: 2.39,
   bloomThreshold: 0,
@@ -83,32 +86,6 @@ var options = {
   color4: [255, 255, 255],
   color5: [74, 145, 0],
 };
-
-const gui = new dat.GUI();
-const bloom = gui.addFolder('bloom');
-bloom.add(options, 'bloomStrength', 0.0, 5.0).name('bloomStrength').listen();
-bloom.add(options, 'bloomRadius', .1, 2.0).name('bloomRadius').listen();
-bloom.open();
-const colors = gui.addFolder('Colors');
-colors.addColor(options, 'color0').name('layer0');
-colors.addColor(options, 'color1').name('layer1');
-colors.addColor(options, 'color2').name('layer2');
-colors.addColor(options, 'color3').name('layer3');
-colors.addColor(options, 'color4').name('layer4');
-colors.addColor(options, 'color5').name('layer5');
-colors.open();
-gui.hide();
-
-// 辉光效果
-const renderScene = new RenderPass(scene, camera);
-const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, .4, .85);
-bloomPass.threshold = options.bloomThreshold;
-bloomPass.strength = options.bloomStrength;
-bloomPass.radius = options.bloomRadius;
-const bloomComposer = new EffectComposer(renderer);
-bloomComposer.renderToScreen = true;
-bloomComposer.addPass(renderScene);
-bloomComposer.addPass(bloomPass);
 
 const textureLoader = new THREE.TextureLoader();
 // 创建网格
@@ -175,9 +152,32 @@ const updateShaderMaterial = deltaTime => {
   portalMaterial.uniforms.color0.value = new THREE.Vector3(...options.color0);
 }
 
-// 光照
-const light = new THREE.AmbientLight(0xffffff, 1.2);
-scene.add(light);
+// 辉光效果
+const renderScene = new RenderPass(scene, camera);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, .4, .85);
+bloomPass.threshold = options.bloomThreshold;
+bloomPass.strength = options.bloomStrength;
+bloomPass.radius = options.bloomRadius;
+const bloomComposer = new EffectComposer(renderer);
+bloomComposer.renderToScreen = true;
+bloomComposer.addPass(renderScene);
+bloomComposer.addPass(bloomPass);
+
+// dat.gui
+const gui = new dat.GUI();
+const bloom = gui.addFolder('bloom');
+bloom.add(options, 'bloomStrength', 0.0, 5.0).name('bloomStrength').listen();
+bloom.add(options, 'bloomRadius', .1, 2.0).name('bloomRadius').listen();
+bloom.open();
+const colors = gui.addFolder('Colors');
+colors.addColor(options, 'color0').name('layer0');
+colors.addColor(options, 'color1').name('layer1');
+colors.addColor(options, 'color2').name('layer2');
+colors.addColor(options, 'color3').name('layer3');
+colors.addColor(options, 'color4').name('layer4');
+colors.addColor(options, 'color5').name('layer5');
+colors.open();
+// gui.hide();
 
 // 加载管理
 const loadingManager = new THREE.LoadingManager();
@@ -204,7 +204,7 @@ loader.load('/models/rickAndMorty.glb', mesh => {
 });
 
 // 动画
-const clock = new THREE.Clock()
+const clock = new THREE.Clock();
 const tick = deltaTime => {
   updateShaderMaterial(deltaTime);
 
