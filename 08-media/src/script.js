@@ -80,17 +80,21 @@ const videoTexture = new THREE.VideoTexture(video);
 const screen = {
   mesh: null,
   material: null,
-  videoMaterial: null
+  videoMaterial: new THREE.MeshPhysicalMaterial({
+    map: videoTexture,
+    envMap: environmentMap
+  })
 };
 // 加载管理
 const loadingManager = new THREE.LoadingManager();
 loadingManager.onLoad = () => { }
-// 使用 dracoLoader 加载用blender压缩过的模型
+// 使用dracoLoader加载用blender压缩过的模型
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 dracoLoader.setDecoderConfig({ type: 'js' });
 const loader = new GLTFLoader(loadingManager);
 loader.setDRACOLoader(dracoLoader);
+
 loader.load('/models/iphone.glb', mesh => {
   if (mesh.scene) {
     mesh.scene.traverse(child => {
@@ -100,10 +104,6 @@ loader.load('/models/iphone.glb', mesh => {
         if (child.name === '屏幕') {
           screen.mesh = child;
           screen.material = child.material;
-          screen.videoMaterial = new THREE.MeshPhysicalMaterial({
-            map: videoTexture,
-            envMap: environmentMap
-          });
         }
         if (child.name.includes('边框')) {
           child.material.metalness = .8;
