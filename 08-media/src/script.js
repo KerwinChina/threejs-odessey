@@ -95,6 +95,7 @@ dracoLoader.setDecoderConfig({ type: 'js' });
 const loader = new GLTFLoader(loadingManager);
 loader.setDRACOLoader(dracoLoader);
 
+let model = null;
 loader.load('/models/iphone.glb', mesh => {
   if (mesh.scene) {
     mesh.scene.traverse(child => {
@@ -116,6 +117,7 @@ loader.load('/models/iphone.glb', mesh => {
     mesh.scene.scale.set(60, 60, 60);
     mesh.scene.position.y = -5;
     mesh.scene.rotation.y = -Math.PI;
+    model = mesh.scene;
     scene.add(mesh.scene);
   }
 });
@@ -140,9 +142,9 @@ window.addEventListener('click', event => {
 
 // 动画
 const tick = () => {
-  renderer.render(scene, camera);
-  // 页面重绘时调用自身
+  model && (model.rotation.y += .005);
   controls && controls.update();
+  renderer.render(scene, camera);
   window.requestAnimationFrame(tick);
 }
 tick();
