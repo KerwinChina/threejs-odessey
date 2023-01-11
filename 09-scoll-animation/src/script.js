@@ -2,7 +2,7 @@ import './style.css';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // 定义渲染尺寸
 const sizes = {
@@ -29,10 +29,10 @@ renderer.toneMappingExposure = 2;
 const scene = new THREE.Scene();
 // 初始化相机
 const camera = new THREE.PerspectiveCamera(55, sizes.width / sizes.height, 0.1, 10000)
-camera.position.set(0, 50, 200);
+camera.position.set(0, 10, 100);
 
-// const controls = new OrbitControls(camera, renderer.domElement);
-// controls.enableDamping = true;
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 // controls.enablePan = false;
 
 // 页面缩放事件监听
@@ -79,19 +79,18 @@ const play = (index) => {
   console.log(animations)
   let meshAnimation = animations[index];
   mixer = new THREE.AnimationMixer(model);
-  console.log(mixer)
   let animationClip = meshAnimation;
   let clipAction = mixer.clipAction(animationClip).play();
   animationClip = clipAction.getClip();
 }
 
-loader.load('/models/fox.glb', mesh => {
+loader.load('/models/test.glb', mesh => {
   if (mesh.scene) {
     mesh.scene.traverse(item => {
       if (item.isMesh) {
       }
     })
-    mesh.scene.rotation.y = Math.PI / 8
+    mesh.scene.scale.set(60, 60, 60);
     scene.add(mesh.scene);
     animations = mesh.animations;
     model = mesh.scene;
@@ -105,6 +104,8 @@ const tick = () => {
 
   const time = clock.getDelta();
   mixer && mixer.update(time);
+
+  controls && controls.update();
 
   renderer.render(scene, camera);
   window.requestAnimationFrame(tick);
@@ -147,4 +148,4 @@ function moveWheel(e) {
     wheelClock = setTimeout(stopWheel, 150);
   }
 }
-document.addEventListener('wheel', moveWheel, false);
+// document.addEventListener('wheel', moveWheel, false);
