@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
 var Bridge;
-export default (Bridge = function() {
+export default (Bridge = function () {
   this.bridgeMesh = new THREE.Group();
   var woodMat = new THREE.MeshLambertMaterial({
-    color: 0x543b14,//0x3d2f19,//0xa98f78,
+    color: 0x543b14,
     side: THREE.DoubleSide
   });
 
