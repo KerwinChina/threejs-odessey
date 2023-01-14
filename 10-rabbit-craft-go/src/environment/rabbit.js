@@ -1,268 +1,274 @@
 import * as THREE from 'three';
-import { TweenMax, Power0, Power1, Power4, Elastic, Back } from 'gsap'
+import { TweenMax, Power0, Power1, Power4, Elastic, Back } from 'gsap';
 
-var Rabbit;
 var clock = new THREE.Clock();
 var delta;
-export default (Rabbit = function () {
-  this.bodyInitPositions = [];
-  this.runningCycle = 0;
 
-  this.rabbitMesh = new THREE.Group();
-  this.bodyMesh = new THREE.Group();
-  this.headMesh = new THREE.Group();
 
-  var bodyMat = new THREE.MeshLambertMaterial({
-    color: 0x5c6363
-  });
+export default class Rabbit {
+  constructor() {
+    this.bodyInitPositions = [];
+    this.runningCycle = 0;
+    this.rabbitMesh = new THREE.Group();
+    this.bodyMesh = new THREE.Group();
+    this.headMesh = new THREE.Group();
+    this.generate();
+  }
 
-  var tailMat = new THREE.MeshLambertMaterial({
-    color: 0xc2bebe
-  });
+  generate() {
+    var bodyMat = new THREE.MeshLambertMaterial({
+      color: 0x5c6363
+    });
 
-  var nouseMat = new THREE.MeshLambertMaterial({
-    color: 0xed716d
-  });
+    var tailMat = new THREE.MeshLambertMaterial({
+      color: 0xc2bebe
+    });
 
-  var mouthMat = new THREE.MeshLambertMaterial({
-    color: 0xd14747
-  });
+    var nouseMat = new THREE.MeshLambertMaterial({
+      color: 0xed716d
+    });
 
-  var mustacheMat = new THREE.MeshLambertMaterial({
-    color: 0x000000
-  });
+    var mouthMat = new THREE.MeshLambertMaterial({
+      color: 0xd14747
+    });
 
-  var eyeMat = new THREE.MeshLambertMaterial({
-    color: 0xffffff
-  });
+    var mustacheMat = new THREE.MeshLambertMaterial({
+      color: 0x000000
+    });
 
-  var irisMat = new THREE.MeshLambertMaterial({
-    color: 0x301817
-  });
+    var eyeMat = new THREE.MeshLambertMaterial({
+      color: 0xffffff
+    });
 
-  var pawMat = new THREE.MeshLambertMaterial({
-    color: 0xbf6970
-  });
+    var irisMat = new THREE.MeshLambertMaterial({
+      color: 0x301817
+    });
 
-  var bodyGeom = new THREE.BoxGeometry(50, 50, 42, 1);
-  var headGeom = new THREE.BoxGeometry(44, 44, 54, 1);
+    var pawMat = new THREE.MeshLambertMaterial({
+      color: 0xbf6970
+    });
 
-  var cheekGeom = new THREE.BoxGeometry(20, 20, 5, 1);
+    var bodyGeom = new THREE.BoxGeometry(50, 50, 42, 1);
+    var headGeom = new THREE.BoxGeometry(44, 44, 54, 1);
 
-  var earGeom = new THREE.BoxGeometry(5, 60, 10, 1);
-  earGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 5, 0));
-  // earGeom.vertices[1].z += -7;
-  // earGeom.vertices[4].z += -7;
-  // earGeom.vertices[5].z += +1;
-  // earGeom.vertices[7].z += +1;
-  // earGeom.vertices[5].x += -5;
-  // earGeom.vertices[1].x += +5;
+    var cheekGeom = new THREE.BoxGeometry(20, 20, 5, 1);
 
-  var eyeGeom = new THREE.BoxGeometry(20, 20, 8, 1);
-  var irisGeom = new THREE.BoxGeometry(8, 8, 8, 1);
+    var earGeom = new THREE.BoxGeometry(5, 60, 10, 1);
+    earGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 5, 0));
+    // earGeom.vertices[1].z += -7;
+    // earGeom.vertices[4].z += -7;
+    // earGeom.vertices[5].z += +1;
+    // earGeom.vertices[7].z += +1;
+    // earGeom.vertices[5].x += -5;
+    // earGeom.vertices[1].x += +5;
 
-  var mouthGeom = new THREE.BoxGeometry(8, 16, 4, 1);
+    var eyeGeom = new THREE.BoxGeometry(20, 20, 8, 1);
+    var irisGeom = new THREE.BoxGeometry(8, 8, 8, 1);
 
-  var mustacheGeom = new THREE.BoxGeometry(0.5, 1, 22, 1);
-  var spotGeom = new THREE.BoxGeometry(1, 1, 1, 1);
+    var mouthGeom = new THREE.BoxGeometry(8, 16, 4, 1);
 
-  var legGeom = new THREE.BoxGeometry(33, 33, 10, 1);
-  var pawGeom = new THREE.BoxGeometry(45, 10, 10, 1);
-  // pawGeom.vertices[2].z -= 1;
-  // pawGeom.vertices[3].z += 1;
-  // pawGeom.vertices[4].z -= 3;
-  // pawGeom.vertices[4].y += 3;
-  // pawGeom.vertices[5].z += 3;
-  // pawGeom.vertices[5].y += 3;
-  // pawGeom.vertices[6].z -= 3;
-  // pawGeom.vertices[7].z += 3;
-  var pawFGeom = new THREE.BoxGeometry(20, 20, 20, 1);
+    var mustacheGeom = new THREE.BoxGeometry(0.5, 1, 22, 1);
+    var spotGeom = new THREE.BoxGeometry(1, 1, 1, 1);
 
-  var tailGeom = new THREE.BoxGeometry(20, 20, 20, 1);
-  tailGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -2));
+    var legGeom = new THREE.BoxGeometry(33, 33, 10, 1);
+    var pawGeom = new THREE.BoxGeometry(45, 10, 10, 1);
+    // pawGeom.vertices[2].z -= 1;
+    // pawGeom.vertices[3].z += 1;
+    // pawGeom.vertices[4].z -= 3;
+    // pawGeom.vertices[4].y += 3;
+    // pawGeom.vertices[5].z += 3;
+    // pawGeom.vertices[5].y += 3;
+    // pawGeom.vertices[6].z -= 3;
+    // pawGeom.vertices[7].z += 3;
+    var pawFGeom = new THREE.BoxGeometry(20, 20, 20, 1);
 
-  var nouseGeom = new THREE.BoxGeometry(20, 20, 15, 1);
+    var tailGeom = new THREE.BoxGeometry(20, 20, 20, 1);
+    tailGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -2));
 
-  var tailGeom = new THREE.BoxGeometry(23, 23, 23, 1);
-  tailGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -2));
+    var nouseGeom = new THREE.BoxGeometry(20, 20, 15, 1);
 
-  this.body = new THREE.Mesh(bodyGeom, bodyMat);
-  this.bodyMesh.add(this.body);
-  this.body.castShadow = true;
+    var tailGeom = new THREE.BoxGeometry(23, 23, 23, 1);
+    tailGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -2));
 
-  this.head = new THREE.Mesh(headGeom, bodyMat);
-  this.head.position.x = -30;
-  this.head.position.y = 30;
-  this.head.castShadow = true;
+    this.body = new THREE.Mesh(bodyGeom, bodyMat);
+    this.bodyMesh.add(this.body);
+    this.body.castShadow = true;
 
-  this.cheekL = new THREE.Mesh(cheekGeom, tailMat);
-  this.cheekL.position.x = -19;
-  this.cheekL.position.y = 19;
-  this.cheekL.position.z = 28;
+    this.head = new THREE.Mesh(headGeom, bodyMat);
+    this.head.position.x = -30;
+    this.head.position.y = 30;
+    this.head.castShadow = true;
 
-  this.cheekR = this.cheekL.clone();
-  this.cheekR.position.z = -this.cheekL.position.z;
+    this.cheekL = new THREE.Mesh(cheekGeom, tailMat);
+    this.cheekL.position.x = -19;
+    this.cheekL.position.y = 19;
+    this.cheekL.position.z = 28;
 
-  this.eyeL = new THREE.Mesh(eyeGeom, eyeMat);
-  this.eyeL.position.x = -23;
-  this.eyeL.position.y = 44;
-  this.eyeL.position.z = 25;
+    this.cheekR = this.cheekL.clone();
+    this.cheekR.position.z = -this.cheekL.position.z;
 
-  this.eyeR = this.eyeL.clone();
-  this.eyeR.position.z = -this.eyeL.position.z;
+    this.eyeL = new THREE.Mesh(eyeGeom, eyeMat);
+    this.eyeL.position.x = -23;
+    this.eyeL.position.y = 44;
+    this.eyeL.position.z = 25;
 
-  this.irisL = new THREE.Mesh(irisGeom, irisMat);
-  this.irisL.position.x = -25;
-  this.irisL.position.y = 40;
-  this.irisL.position.z = 26;
+    this.eyeR = this.eyeL.clone();
+    this.eyeR.position.z = -this.eyeL.position.z;
 
-  this.irisR = this.irisL.clone();
-  this.irisR.position.z = -this.irisL.position.z;
+    this.irisL = new THREE.Mesh(irisGeom, irisMat);
+    this.irisL.position.x = -25;
+    this.irisL.position.y = 40;
+    this.irisL.position.z = 26;
 
-  this.nouse = new THREE.Mesh(nouseGeom, nouseMat);
-  this.nouse.position.x = -45;
-  this.nouse.position.y = 45;
+    this.irisR = this.irisL.clone();
+    this.irisR.position.z = -this.irisL.position.z;
 
-  this.mouth = new THREE.Mesh(mouthGeom, mouthMat);
-  this.mouth.position.x = -50;
-  this.mouth.position.y = 17;
+    this.nouse = new THREE.Mesh(nouseGeom, nouseMat);
+    this.nouse.position.x = -45;
+    this.nouse.position.y = 45;
 
-  this.mustacheL1 = new THREE.Mesh(mustacheGeom, mustacheMat);
-  this.mustacheL1.position.x = -52;
-  this.mustacheL1.position.y = 13;
-  this.mustacheL1.position.z = 25;
-  this.mustacheL1.rotation.x = +0.1;
+    this.mouth = new THREE.Mesh(mouthGeom, mouthMat);
+    this.mouth.position.x = -50;
+    this.mouth.position.y = 17;
 
-  this.mustacheR1 = this.mustacheL1.clone();
-  this.mustacheR1.position.z = -this.mustacheL1.position.z;
-  this.mustacheR1.position.y = 23;
+    this.mustacheL1 = new THREE.Mesh(mustacheGeom, mustacheMat);
+    this.mustacheL1.position.x = -52;
+    this.mustacheL1.position.y = 13;
+    this.mustacheL1.position.z = 25;
+    this.mustacheL1.rotation.x = +0.1;
 
-  this.mustacheL2 = new THREE.Mesh(mustacheGeom, mustacheMat);
-  this.mustacheL2.position.x = -52;
-  this.mustacheL2.position.y = 23;
-  this.mustacheL2.position.z = 25;
-  this.mustacheL2.rotation.x = -0.1;
+    this.mustacheR1 = this.mustacheL1.clone();
+    this.mustacheR1.position.z = -this.mustacheL1.position.z;
+    this.mustacheR1.position.y = 23;
 
-  this.mustacheR2 = this.mustacheL2.clone();
-  this.mustacheR2.position.z = -this.mustacheL2.position.z;
-  this.mustacheR2.position.y = 13;
+    this.mustacheL2 = new THREE.Mesh(mustacheGeom, mustacheMat);
+    this.mustacheL2.position.x = -52;
+    this.mustacheL2.position.y = 23;
+    this.mustacheL2.position.z = 25;
+    this.mustacheL2.rotation.x = -0.1;
 
-  this.mustacheL3 = new THREE.Mesh(mustacheGeom, mustacheMat);
-  this.mustacheL3.position.x = -52;
-  this.mustacheL3.position.y = 18;
-  this.mustacheL3.position.z = 25;
+    this.mustacheR2 = this.mustacheL2.clone();
+    this.mustacheR2.position.z = -this.mustacheL2.position.z;
+    this.mustacheR2.position.y = 13;
 
-  this.mustacheR3 = this.mustacheL3.clone();
-  this.mustacheR3.position.z = -this.mustacheL3.position.z;
-  this.mustacheR3.position.y = 18;
+    this.mustacheL3 = new THREE.Mesh(mustacheGeom, mustacheMat);
+    this.mustacheL3.position.x = -52;
+    this.mustacheL3.position.y = 18;
+    this.mustacheL3.position.z = 25;
 
-  this.spotL1 = new THREE.Mesh(spotGeom, mustacheMat);
-  this.spotL1.position.x = -46;
-  this.spotL1.position.y = 25;
-  this.spotL1.position.z = 27;
+    this.mustacheR3 = this.mustacheL3.clone();
+    this.mustacheR3.position.z = -this.mustacheL3.position.z;
+    this.mustacheR3.position.y = 18;
 
-  this.spotR1 = this.spotL1.clone();
-  this.spotR1.position.z = -this.spotL1.position.z;
+    this.spotL1 = new THREE.Mesh(spotGeom, mustacheMat);
+    this.spotL1.position.x = -46;
+    this.spotL1.position.y = 25;
+    this.spotL1.position.z = 27;
 
-  this.spotL2 = new THREE.Mesh(spotGeom, mustacheMat);
-  this.spotL2.position.x = -42;
-  this.spotL2.position.y = 22;
-  this.spotL2.position.z = 27;
+    this.spotR1 = this.spotL1.clone();
+    this.spotR1.position.z = -this.spotL1.position.z;
 
-  this.spotR2 = this.spotL2.clone();
-  this.spotR2.position.z = -this.spotL2.position.z;
+    this.spotL2 = new THREE.Mesh(spotGeom, mustacheMat);
+    this.spotL2.position.x = -42;
+    this.spotL2.position.y = 22;
+    this.spotL2.position.z = 27;
 
-  this.spotL3 = new THREE.Mesh(spotGeom, mustacheMat);
-  this.spotL3.position.x = -48;
-  this.spotL3.position.y = 18;
-  this.spotL3.position.z = 27;
+    this.spotR2 = this.spotL2.clone();
+    this.spotR2.position.z = -this.spotL2.position.z;
 
-  this.spotR3 = this.spotL3.clone();
-  this.spotR3.position.z = -this.spotL3.position.z;
+    this.spotL3 = new THREE.Mesh(spotGeom, mustacheMat);
+    this.spotL3.position.x = -48;
+    this.spotL3.position.y = 18;
+    this.spotL3.position.z = 27;
 
-  this.earR = new THREE.Mesh(earGeom, pawMat);
-  this.earR.position.x = -9;
-  this.earR.position.y = 72;
-  this.earR.position.z = -13;
-  this.earR.rotation.z = -0.1;
+    this.spotR3 = this.spotL3.clone();
+    this.spotR3.position.z = -this.spotL3.position.z;
 
-  this.earL = this.earR.clone();
-  this.earL.position.z = -this.earR.position.z;
-  this.earL.position.x = -19;
-  this.earL.rotation.y = Math.PI;
-  this.earL.rotation.z = -0.4;
+    this.earR = new THREE.Mesh(earGeom, pawMat);
+    this.earR.position.x = -9;
+    this.earR.position.y = 72;
+    this.earR.position.z = -13;
+    this.earR.rotation.z = -0.1;
 
-  this.legL = new THREE.Mesh(legGeom, pawMat);
-  this.legL.position.x = 14;
-  this.legL.position.z = 25;
-  this.legL.position.y = -2;
+    this.earL = this.earR.clone();
+    this.earL.position.z = -this.earR.position.z;
+    this.earL.position.x = -19;
+    this.earL.rotation.y = Math.PI;
+    this.earL.rotation.z = -0.4;
 
-  this.legR = new THREE.Mesh(legGeom, pawMat);
-  this.legR = this.legL.clone();
-  this.legR.position.z = -this.legL.position.z;
+    this.legL = new THREE.Mesh(legGeom, pawMat);
+    this.legL.position.x = 14;
+    this.legL.position.z = 25;
+    this.legL.position.y = -2;
 
-  this.pawBL = new THREE.Mesh(pawGeom, pawMat);
-  this.pawBL.position.x = 5;
-  this.pawBL.position.y = -27;
-  this.pawBL.position.z = 25;
-  this.pawBL.rotation.z = 0.1;
+    this.legR = new THREE.Mesh(legGeom, pawMat);
+    this.legR = this.legL.clone();
+    this.legR.position.z = -this.legL.position.z;
 
-  this.pawBR = new THREE.Mesh(pawGeom, pawMat);
-  this.pawBR = this.pawBL.clone();
-  this.pawBR.position.z = -this.pawBL.position.z;
+    this.pawBL = new THREE.Mesh(pawGeom, pawMat);
+    this.pawBL.position.x = 5;
+    this.pawBL.position.y = -27;
+    this.pawBL.position.z = 25;
+    this.pawBL.rotation.z = 0.1;
 
-  this.pawFL = new THREE.Mesh(pawFGeom, pawMat);
-  this.pawFL.position.x = -30;
-  this.pawFL.position.y = -7;
-  this.pawFL.position.z = 25;
+    this.pawBR = new THREE.Mesh(pawGeom, pawMat);
+    this.pawBR = this.pawBL.clone();
+    this.pawBR.position.z = -this.pawBL.position.z;
 
-  this.pawFR = new THREE.Mesh(pawFGeom, pawMat);
-  this.pawFR = this.pawFL.clone();
-  this.pawFR.position.z = -this.pawFL.position.z;
+    this.pawFL = new THREE.Mesh(pawFGeom, pawMat);
+    this.pawFL.position.x = -30;
+    this.pawFL.position.y = -7;
+    this.pawFL.position.z = 25;
 
-  this.tail = new THREE.Mesh(tailGeom, tailMat);
-  this.tail.position.x = 25;
-  this.tail.position.y = 23;
+    this.pawFR = new THREE.Mesh(pawFGeom, pawMat);
+    this.pawFR = this.pawFL.clone();
+    this.pawFR.position.z = -this.pawFL.position.z;
 
-  this.bodyMesh.add(this.legL);
-  this.bodyMesh.add(this.legR);
-  this.bodyMesh.add(this.pawBL);
-  this.bodyMesh.add(this.pawBR);
-  this.bodyMesh.add(this.pawFL);
-  this.bodyMesh.add(this.pawFR);
-  this.bodyMesh.add(this.tail);
+    this.tail = new THREE.Mesh(tailGeom, tailMat);
+    this.tail.position.x = 25;
+    this.tail.position.y = 23;
 
-  this.headMesh.add(this.eyeL);
-  this.headMesh.add(this.eyeR);
-  this.headMesh.add(this.irisL);
-  this.headMesh.add(this.irisR);
-  this.headMesh.add(this.mouth);
-  this.headMesh.add(this.mustacheL1);
-  this.headMesh.add(this.mustacheL2);
-  this.headMesh.add(this.mustacheL3);
-  this.headMesh.add(this.mustacheR1);
-  this.headMesh.add(this.mustacheR2);
-  this.headMesh.add(this.mustacheR3);
-  this.headMesh.add(this.spotL1);
-  this.headMesh.add(this.spotL2);
-  this.headMesh.add(this.spotL3);
-  this.headMesh.add(this.spotR1);
-  this.headMesh.add(this.spotR2);
-  this.headMesh.add(this.spotR3);
-  this.headMesh.add(this.head);
-  this.headMesh.add(this.cheekL);
-  this.headMesh.add(this.cheekR);
-  this.headMesh.add(this.nouse);
-  this.headMesh.add(this.earL);
-  this.headMesh.add(this.earR);
+    this.bodyMesh.add(this.legL);
+    this.bodyMesh.add(this.legR);
+    this.bodyMesh.add(this.pawBL);
+    this.bodyMesh.add(this.pawBR);
+    this.bodyMesh.add(this.pawFL);
+    this.bodyMesh.add(this.pawFR);
+    this.bodyMesh.add(this.tail);
 
-  this.rabbitMesh.add(this.bodyMesh);
-  this.rabbitMesh.add(this.headMesh);
-  this.rabbitMesh.rotation.y = Math.PI / 2;
-  this.rabbitMesh.scale.set(0.5, 0.5, 0.5);
-  this.rabbitMesh.position.set(170, 0, 450);
+    this.headMesh.add(this.eyeL);
+    this.headMesh.add(this.eyeR);
+    this.headMesh.add(this.irisL);
+    this.headMesh.add(this.irisR);
+    this.headMesh.add(this.mouth);
+    this.headMesh.add(this.mustacheL1);
+    this.headMesh.add(this.mustacheL2);
+    this.headMesh.add(this.mustacheL3);
+    this.headMesh.add(this.mustacheR1);
+    this.headMesh.add(this.mustacheR2);
+    this.headMesh.add(this.mustacheR3);
+    this.headMesh.add(this.spotL1);
+    this.headMesh.add(this.spotL2);
+    this.headMesh.add(this.spotL3);
+    this.headMesh.add(this.spotR1);
+    this.headMesh.add(this.spotR2);
+    this.headMesh.add(this.spotR3);
+    this.headMesh.add(this.head);
+    this.headMesh.add(this.cheekL);
+    this.headMesh.add(this.cheekR);
+    this.headMesh.add(this.nouse);
+    this.headMesh.add(this.earL);
+    this.headMesh.add(this.earR);
 
-  Rabbit.prototype.blink = function () {
+    this.rabbitMesh.add(this.bodyMesh);
+    this.rabbitMesh.add(this.headMesh);
+    this.rabbitMesh.rotation.y = Math.PI / 2;
+    this.rabbitMesh.scale.set(0.5, 0.5, 0.5);
+    this.rabbitMesh.position.set(170, 0, 450);
+
+  }
+
+  blink() {
     var _this = this;
     var sp = 0.5 + Math.random();
     if (Math.random() > 0.2)
@@ -271,16 +277,11 @@ export default (Rabbit = function () {
         ease: Power1.easeInOut,
         yoyo: true,
         repeat: 3
-        /*   onComplete: function () {
-          _this.blink()
-      } */
       });
-  };
+  }
 
-  //JUMPING
-  Rabbit.prototype.jump = function () {
-    // if (this.status == "jumping") return;
-    //this.status = "jumping";
+  // 跳跃
+  jump() {
     var _this = this;
     var speed = 10;
     var totalSpeed = 10 / speed;
@@ -344,11 +345,10 @@ export default (Rabbit = function () {
       yoyo: true,
       repeat: 1
     });
-  };
+  }
 
-  //NODING
-
-  Rabbit.prototype.nod = function () {
+  // 点头
+  nod() {
     var _this = this;
     var sp = 0.5 + Math.random();
 
@@ -398,11 +398,10 @@ export default (Rabbit = function () {
         yoyo: true,
         repeat: 1
       });
-  };
+  }
 
-  //RUNNING
-
-  Rabbit.prototype.run = function () {
+  // 奔跑
+  run() {
     //this.status = "running";
     var speed = 6;
     var maxSpeed = 48;
@@ -464,9 +463,10 @@ export default (Rabbit = function () {
     this.pawBL.rotation.z = (Math.cos(t + Math.PI * 1.5) * Math.PI) / 3;
 
     this.pawBL.position.x = -Math.cos(Math.PI + t) * amp + 10;
-  };
+  }
 
-  Rabbit.prototype.move = function () {
+  // 移动
+  move() {
     var speed = 10;
     var maxSpeed = 48;
     var s = Math.min(speed, maxSpeed);
@@ -534,9 +534,6 @@ export default (Rabbit = function () {
     this.bodyMesh.rotation.z = Math.sin(t - Math.PI / 2) * amp * 0.1;
     this.bodyMesh.position.y = 7 + Math.sin(t - Math.PI / 2) * amp * 0.5;
 
-    // MOUTH
-    //this.mouth.rotation.z = Math.PI / 16 + Math.cos(t) * amp * 0.05;
-
     // HEAD
     this.headMesh.position.x = 2 + Math.sin(t - Math.PI / 2) * amp * 0.5;
     this.headMesh.position.y = 8 + Math.cos(t - Math.PI / 2) * amp * 0.7;
@@ -576,16 +573,17 @@ export default (Rabbit = function () {
     this.pawBL.rotation.z = (Math.cos(t + Math.PI * 1.5) * Math.PI) / 3;
 
     this.pawBL.position.x = -Math.cos(Math.PI + t) * amp + 10;
-  };
+  }
 
-  Rabbit.prototype.fall = function () {
+  // 坠落
+  fall() {
     TweenMax.to([this.rabbitMesh.position], 4, {
       y: -700,
       ease: Power0.easeInOut
     });
-  };
+  }
 
-  Rabbit.prototype.killNod = function () {
+  killNod() {
     TweenMax.killTweensOf(this.headMesh.rotation);
     TweenMax.killTweensOf(this.earL.rotation);
     TweenMax.killTweensOf(this.earR.rotation);
@@ -594,24 +592,21 @@ export default (Rabbit = function () {
     TweenMax.killTweensOf(this.nouse.scale);
     TweenMax.killTweensOf([this.eyeR.scale, this.eyeL.scale]);
     this.headMesh.rotation.set(0, 0, 0);
-  };
+  }
 
-  Rabbit.prototype.killJump = function () {
+  killJump() {
     TweenMax.killTweensOf([this.earL.rotation, this.earR.rotation]);
     TweenMax.killTweensOf([this.pawFL.rotation, this.pawFR.rotation]);
     TweenMax.killTweensOf([this.pawBL.rotation, this.pawBR.rotation]);
     TweenMax.killTweensOf([this.tail.rotation, this.mouth.rotation]);
     TweenMax.killTweensOf(this.rabbitMesh.position);
-  };
+  }
 
-  Rabbit.prototype.killMove = function () {
+  killMove() {
     this.rabbitMesh.position.y = 0;
     this.rabbitMesh.rotation.z = Math.PI * 2;
-
     this.bodyMesh.rotation.z = Math.PI * 2;
     this.bodyMesh.position.y = this.bodyMesh.position.y;
-    //this.mouth.rotation.z = Math.PI * 2;
-
     this.headMesh.rotation.z = Math.PI * 2;
     this.headMesh.position.x;
     this.headMesh.position.y;
@@ -620,7 +615,6 @@ export default (Rabbit = function () {
     // EYES
     this.eyeR.scale.y = 1;
     this.eyeL.scale.y = 1;
-
     // TAIL
     this.tail.rotation.z = Math.PI * 2;
 
@@ -631,22 +625,18 @@ export default (Rabbit = function () {
     this.pawFR.position.x = -30;
 
     // FRONT LEFT PAW
-
     this.pawFL.position.y = -7;
     this.pawFL.rotation.z = Math.PI * 2;
-
     this.pawFL.position.x = -30;
 
     // BACK RIGHT PAW
     this.pawBR.position.y = -27;
     this.pawBR.rotation.z = 0.1;
-
     this.pawBR.position.x = 5;
 
     // BACK LEFT PAW
     this.pawBL.position.y = -27;
     this.pawBL.rotation.z = 0.1;
-
     this.pawBL.position.x = 5;
-  };
-});
+  }
+}

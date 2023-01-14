@@ -57,13 +57,11 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-
-
 // 光照
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.castShadow = true;
 directionalLight.shadow.camera.far = 20;
 directionalLight.shadow.mapSize.set(1024, 1024);
@@ -106,9 +104,6 @@ const createWorld = () => {
 }
 
 createWorld();
-
-
-
 
 var clock = new THREE.Clock();
 
@@ -179,7 +174,6 @@ document.addEventListener('keyup', e => {
         break;
     }
   }
-
 })
 
 var isGetCarrot = false;
@@ -213,6 +207,9 @@ const getApple = (i, x) => {
   apple[i].appleMesh.position.set(-20 + x, -10, 910);
   apple[i].appleMesh.rotation.set(0, 0, 0.1);
 }
+
+var carrots = [];
+var roundCount = 0;
 
 
 // 检查边界
@@ -263,6 +260,34 @@ const checkCollision = () => {
   }
 }
 
+const checkPlay = arr => {
+  let count = roundCount;
+  if (arr.length === 2) {
+    roundCount++;
+    for (let i = 0; i <= 2; i++) {
+      arr.shift(arr[i]);
+    }
+  }
+  if (roundCount > count) {
+    return (toggleSetCarrot = true);
+  }
+  if ((toggleSetCarrot = true)) {
+    setTimeout(() => {
+      count++;
+    }, 1200);
+  }
+  return (toggleSetCarrot = false);
+}
+
+
+
+
+
+
+
+
+
+
 var drops = [];
 var count = 0;
 
@@ -294,6 +319,7 @@ const tick = () => {
     }
   }
 
+  checkPlay(carrots);
 
   controls && controls.update();
   renderer.render(scene, camera);

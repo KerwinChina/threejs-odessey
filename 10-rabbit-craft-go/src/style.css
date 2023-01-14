@@ -8,7 +8,9 @@ body {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background: radial-gradient(at left top, rgb(192, 132, 252), rgb(209, 213, 219), rgb(165, 243, 252));
+  background: #1FA2FF;
+  background: -webkit-linear-gradient(to top, #A6FFCB, #12D8FA, #1FA2FF);
+  background: linear-gradient(to top, #A6FFCB, #12D8FA, #1FA2FF);
 }
 
 .webgl {
@@ -23,12 +25,13 @@ body {
   left: 0;
   bottom: 0;
   z-index: 1;
-  color: #0A0942;
+  color: #ffffff;
   display: flex;
   align-items: center;
   padding: 16px;
   transition: all .25s ease-in-out;
   text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
 }
 
 .github:hover {

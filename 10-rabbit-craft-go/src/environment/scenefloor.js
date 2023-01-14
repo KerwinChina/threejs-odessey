@@ -10,38 +10,35 @@ export default class Floor {
   }
 
   generate() {
-    // LEFT FIELD
+    // 左侧地面
     var leftFieldMat = new THREE.MeshLambertMaterial({
-      color: 0x75bd2d,
+      color: 0x786410,
       side: THREE.DoubleSide,
     });
-    var leftFieldGeom = new THREE.BoxGeometry(800, 30, 1800);
+    var leftFieldGeom = new THREE.BoxBufferGeometry(800, 30, 1800);
     this.leftFieldMesh = new THREE.Mesh(leftFieldGeom, leftFieldMat);
     this.leftFieldMesh.receiveShadow = true;
     this.leftFieldMesh.position.set(-500, -30, 0);
 
-    // RIGHT FIELD
+    // 右侧地面
     this.rightFieldMesh = this.leftFieldMesh.clone();
     this.rightFieldMesh.receiveShadow = true;
     this.rightFieldMesh.position.set(500, -30, 0);
 
-    //BOTTOM FIELD
-    var bottomFieldGeom = new THREE.BoxGeometry(1500, 120, 1500);
+    // 中间棱柱
+    var bottomFieldGeom = new THREE.CylinderGeometry(1200, 900, 200, 4, 4);
     this.bottomFieldMesh = new THREE.Mesh(bottomFieldGeom, leftFieldMat);
     this.bottomFieldMesh.receiveShadow = true;
-    this.bottomFieldMesh.position.set(0, -180, 0);
-    //this.bottomFieldMesh.rotation.y = .3;
+    this.bottomFieldMesh.position.set(0, -200, 0);
+    this.bottomFieldMesh.rotation.y = - Math.PI / 4;
 
-    var bottom1FieldGeom = new THREE.BoxGeometry(1300, 180, 1300);
+    // 底部棱锥
+    var bottom1FieldGeom = new THREE.ConeGeometry(850, 800, 4);
     this.bottom1FieldMesh = new THREE.Mesh(bottom1FieldGeom, leftFieldMat);
     this.bottom1FieldMesh.receiveShadow = true;
-    this.bottom1FieldMesh.position.set(0, -380, 0);
-    //this.bottom1FieldMesh.rotation.y = -0.3;
-
-    var bottom2FieldGeom = new THREE.BoxGeometry(800, 280, 800);
-    this.bottom2FieldMesh = new THREE.Mesh(bottom2FieldGeom, leftFieldMat);
-    this.bottom2FieldMesh.receiveShadow = true;
-    this.bottom2FieldMesh.position.set(0, -680, 0);
+    this.bottom1FieldMesh.position.set(0, -750, 0);
+    this.bottom1FieldMesh.rotation.z = - Math.PI;
+    this.bottom1FieldMesh.rotation.y = - Math.PI / 4;
 
     //STREAMGROUND
     var strGroundMat = new THREE.MeshLambertMaterial({
@@ -52,7 +49,7 @@ export default class Floor {
     this.strGroundMesh = new THREE.Mesh(strCroundGeom, strGroundMat);
     this.strGroundMesh.position.set(0, -40, 0);
 
-    // STREAM
+    // 小河
     var streamMat = new THREE.MeshLambertMaterial({
       color: 0x0941ba,
       side: THREE.DoubleSide,
@@ -61,7 +58,7 @@ export default class Floor {
     this.streamMesh = new THREE.Mesh(streamGeom, streamMat);
     this.streamMesh.position.set(0, -32, 0);
 
-    //TREES
+    // 树
     var tree1 = new Tree(-100, 0, -100);
     var tree2 = new Tree(-150, 0, -180);
     var tree3 = new Tree(-100, 0, -220);
@@ -88,7 +85,7 @@ export default class Floor {
     var tree23 = new Tree(630, 0, -130);
     var tree24 = new Tree(480, 0, -480);
 
-    //BRIDGE
+    // 桥
     this.bridge = new Bridge();
 
     //FLOR
@@ -96,11 +93,9 @@ export default class Floor {
     this.floorMesh.add(this.rightFieldMesh);
     this.floorMesh.add(this.bottomFieldMesh);
     this.floorMesh.add(this.bottom1FieldMesh);
-    this.floorMesh.add(this.bottom2FieldMesh);
     this.floorMesh.add(this.streamMesh);
     this.floorMesh.add(this.strGroundMesh);
     this.floorMesh.add(this.bridge.bridgeMesh);
-
     this.floorMesh.add(tree1.treeMesh);
     this.floorMesh.add(tree2.treeMesh);
     this.floorMesh.add(tree3.treeMesh);
