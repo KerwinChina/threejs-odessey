@@ -11,14 +11,14 @@ export default class Floor {
 
   generate() {
     // 左侧地面
-    var leftFieldMat = new THREE.MeshLambertMaterial({
-      color: 0x786410,
+    var leftFieldMat = new THREE.MeshToonMaterial({
+      color: 0x015521d,
       side: THREE.DoubleSide,
     });
     var leftFieldGeom = new THREE.BoxBufferGeometry(800, 30, 1800);
     this.leftFieldMesh = new THREE.Mesh(leftFieldGeom, leftFieldMat);
-    this.leftFieldMesh.receiveShadow = true;
     this.leftFieldMesh.position.set(-500, -30, 0);
+    this.leftFieldMesh.receiveShadow = true;
 
     // 右侧地面
     this.rightFieldMesh = this.leftFieldMesh.clone();
@@ -28,14 +28,12 @@ export default class Floor {
     // 中间棱柱
     var bottomFieldGeom = new THREE.CylinderGeometry(1200, 900, 200, 4, 4);
     this.bottomFieldMesh = new THREE.Mesh(bottomFieldGeom, leftFieldMat);
-    this.bottomFieldMesh.receiveShadow = true;
     this.bottomFieldMesh.position.set(0, -200, 0);
     this.bottomFieldMesh.rotation.y = - Math.PI / 4;
 
     // 底部棱锥
     var bottom1FieldGeom = new THREE.ConeGeometry(850, 800, 4);
     this.bottom1FieldMesh = new THREE.Mesh(bottom1FieldGeom, leftFieldMat);
-    this.bottom1FieldMesh.receiveShadow = true;
     this.bottom1FieldMesh.position.set(0, -750, 0);
     this.bottom1FieldMesh.rotation.z = - Math.PI;
     this.bottom1FieldMesh.rotation.y = - Math.PI / 4;
@@ -71,19 +69,17 @@ export default class Floor {
     var tree10 = new Tree(-320, 0, 240);
     var tree11 = new LeafTree(-630, 0, 130);
     var tree12 = new LeafTree(-480, 0, 480);
-
     var tree13 = new Tree(100, 0, 100);
     var tree14 = new Tree(150, 0, 180);
     var tree15 = new Tree(100, 0, 220);
     var tree16 = new LeafTree(400, 0, 400);
-    var tree17 = new Tree(880, 0, 830);
-    var tree18 = new Tree(810, 0, 740);
-    var tree19 = new Tree(740, 0, 820);
-    var tree20 = new Tree(888, 0, 680);
     var tree21 = new LeafTree(878, 0, -680);
     var tree22 = new Tree(320, 0, -240);
     var tree23 = new Tree(630, 0, -130);
     var tree24 = new Tree(480, 0, -480);
+
+    // tree20.leavesMesh.material.color = new THREE.Color(0xff0000)
+
 
     // 桥
     this.bridge = new Bridge();
@@ -112,14 +108,9 @@ export default class Floor {
     this.floorMesh.add(tree14.treeMesh);
     this.floorMesh.add(tree15.treeMesh);
     this.floorMesh.add(tree16.treeMesh);
-    this.floorMesh.add(tree17.treeMesh);
-    this.floorMesh.add(tree18.treeMesh);
-    this.floorMesh.add(tree19.treeMesh);
-    this.floorMesh.add(tree20.treeMesh);
     this.floorMesh.add(tree21.treeMesh);
     this.floorMesh.add(tree22.treeMesh);
     this.floorMesh.add(tree23.treeMesh);
     this.floorMesh.add(tree24.treeMesh);
-    this.floorMesh.receiveShadow = true;
   }
 };

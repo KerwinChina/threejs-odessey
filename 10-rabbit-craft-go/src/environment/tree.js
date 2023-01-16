@@ -16,7 +16,7 @@ export default class Tree {
       color: 0x543b14,
       side: THREE.DoubleSide
     });
-    var trunkGeom = new THREE.BoxGeometry(20, 200, 20);
+    var trunkGeom = new THREE.BoxBufferGeometry(20, 200, 20);
     this.trunkMesh = new THREE.Mesh(trunkGeom, trunkMat);
     this.trunkMesh.position.set(0, 58, 0);
     this.trunkMesh.castShadow = true;
@@ -27,9 +27,9 @@ export default class Tree {
       color: 0x016316,
       side: THREE.DoubleSide
     });
-    var leavesGeom = new THREE.BoxGeometry(44, 460, 44);
+    var leavesGeom = new THREE.BoxBufferGeometry(80, 400, 80);
     this.leavesMesh = new THREE.Mesh(leavesGeom, leavesMat);
-    this.leavesMesh.position.set(0, 370, 0);
+    this.leavesMesh.position.set(0, 350, 0);
     this.leavesMesh.castShadow = true;
 
     this.treeMesh.add(this.trunkMesh);

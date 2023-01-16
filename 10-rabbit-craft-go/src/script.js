@@ -9,9 +9,10 @@ import Carrot from './environment/carrot';
 import Rabbit from './environment/rabbit';
 // 瀑布
 import Waterfall from './environment/waterfall';
-// 苹果
-import Apple from './environment/apples';
 
+import gsap from 'gsap'
+
+console.log(gsap)
 
 // 定义渲染尺寸
 const sizes = {
@@ -31,7 +32,10 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.physicallyCorrectLights = true;
 // renderer.toneMapping = THREE.ACESFilmicToneMapping;
 // renderer.toneMappingExposure = 2;
-renderer.outputEncoding = THREE.sRGBEncoding
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.shadowMapEnabled = true;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.needsUpdate = true;
 
 // 初始化场景
 const scene = new THREE.Scene();
@@ -61,20 +65,39 @@ window.addEventListener('resize', () => {
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
 directionalLight.castShadow = true;
-directionalLight.shadow.camera.far = 20;
+directionalLight.shadow.camera.far = 20000;
 directionalLight.shadow.mapSize.set(1024, 1024);
 directionalLight.shadow.normalBias = 0.05;
-directionalLight.position.set(1, 3, 5);
+directionalLight.shadow.camera.top = 800;
+directionalLight.shadow.camera.bottom = -800;
+directionalLight.shadow.camera.left = -800;
+directionalLight.shadow.camera.right = 800;
+directionalLight.position.set(600, 1200, 800);
 scene.add(directionalLight);
+
+const cubeGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
+const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+cube.position.set(0, 0, 0);
+
+directionalLight.target = cube;
+
+
+var helper = new THREE.DirectionalLightHelper(directionalLight, 500, 0xff0000);
+scene.add(helper)
+
+// const grid = new THREE.GridHelper(2000, 2000, 0x000000, 0x000000);
+// grid.position.set(0, 0, 0);
+// grid.material.transparent = true;
+// grid.material.opacity = 0.1;
+// scene.add(grid);
 
 // 创建场景
 var floor = null;
 var rabbit = null;
 var carrot = [];
-var apples = [];
-var apple = [];
 var waterfall = null;
 const createWorld = () => {
   // 创建地面
@@ -91,16 +114,9 @@ const createWorld = () => {
     scene.add(carrot[i].carrotMesh);
   }
 
-  // 创建苹果
-  for (let i = 0; i < 25; i++) {
-    apple[i] = new Apple();
-    scene.add(apple[i].appleMesh);
-    apples.push(apple[i].appleMesh);
-  }
-
   // 创建瀑布
-  waterfall = new Waterfall();
-  scene.add(waterfall.waterfallMesh);
+  waterfall = new Waterfall(scene);
+  scene.add(waterfall.drop);
 }
 
 createWorld();
@@ -193,19 +209,13 @@ const setCarrot = () => {
   }
 }
 
+setCarrot();
+
 const getCarrot = (i, x) => {
   setTimeout(() => {
     rabbit.jump();
   }, 500);
   carrot[i].carrotMesh.position.set(0 + x, -10, 910);
-}
-
-const getApple = (i, x) => {
-  setTimeout(() => {
-    rabbit.jump();
-  }, 500);
-  apple[i].appleMesh.position.set(-20 + x, -10, 910);
-  apple[i].appleMesh.rotation.set(0, 0, 0.1);
 }
 
 var carrots = [];
@@ -224,15 +234,7 @@ const checkCollision = () => {
       carrots.push(carrot[i].carrotMesh);
     }
   }
-  //COLLISION WITH APPLES
-  for (let i = 0; i < apples.length; i++) {
-    var rabbApple = rabbit.rabbitMesh.position
-      .clone()
-      .sub(apple[i].appleMesh.position.clone());
-    if (rabbApple.length() <= 25) {
-      getApple(i, -i * 20);
-    }
-  }
+
   //IF END OF FLOOR
   var rabbFloor = floor.floorMesh.position
     .clone()
@@ -279,17 +281,9 @@ const checkPlay = arr => {
   return (toggleSetCarrot = false);
 }
 
-
-
-
-
-
-
-
-
-
 var drops = [];
 var count = 0;
+
 
 // 动画
 const tick = () => {
@@ -307,7 +301,7 @@ const tick = () => {
   // 瀑布动画
   if (count % 3 == 0) {
     for (let i = 0; i < 7; i++) {
-      drops.push(new Waterfall());
+      drops.push(new Waterfall(scene));
     }
   }
   count++;

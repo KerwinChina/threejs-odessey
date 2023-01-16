@@ -50,7 +50,6 @@ export default class Rabbit {
 
     var bodyGeom = new THREE.BoxGeometry(50, 50, 42, 1);
     var headGeom = new THREE.BoxGeometry(44, 44, 54, 1);
-
     var cheekGeom = new THREE.BoxGeometry(20, 20, 5, 1);
 
     var earGeom = new THREE.BoxGeometry(5, 60, 10, 1);
@@ -265,11 +264,10 @@ export default class Rabbit {
     this.rabbitMesh.rotation.y = Math.PI / 2;
     this.rabbitMesh.scale.set(0.5, 0.5, 0.5);
     this.rabbitMesh.position.set(170, 0, 450);
-
+    this.rabbitMesh.castShadow = true;
   }
 
   blink() {
-    var _this = this;
     var sp = 0.5 + Math.random();
     if (Math.random() > 0.2)
       TweenMax.to([this.eyeR.scale, this.eyeL.scale], sp / 8, {
@@ -282,7 +280,6 @@ export default class Rabbit {
 
   // 跳跃
   jump() {
-    var _this = this;
     var speed = 10;
     var totalSpeed = 10 / speed;
     var jumpHeight = 150;
@@ -402,7 +399,6 @@ export default class Rabbit {
 
   // 奔跑
   run() {
-    //this.status = "running";
     var speed = 6;
     var maxSpeed = 48;
     var s = Math.min(speed, maxSpeed);
@@ -410,14 +406,12 @@ export default class Rabbit {
     this.runningCycle += delta * s * 0.7;
     this.runningCycle = this.runningCycle % (Math.PI * 2);
     var t = this.runningCycle;
-
     var amp = 4;
     var disp = 0.2;
 
     // BODY
     this.rabbitMesh.position.y = 6 + Math.sin(t - Math.PI / 2) * amp;
     this.rabbitMesh.rotation.z = 0.2 + Math.sin(t - Math.PI / 2) * amp * 0.1;
-
     this.bodyMesh.rotation.z = Math.sin(t - Math.PI / 2) * amp * 0.1;
     this.bodyMesh.position.y = 7 + Math.sin(t - Math.PI / 2) * amp * 0.5;
 
@@ -442,14 +436,11 @@ export default class Rabbit {
     // FRONT RIGHT PAW
     this.pawFR.position.y = 1.5 + Math.sin(t) * amp - 15;
     this.pawFR.rotation.z = (Math.cos(t) * Math.PI) / 4;
-
     this.pawFR.position.x = 6 - Math.cos(t) * amp * 2 - 40;
 
     // FRONT LEFT PAW
-
     this.pawFL.position.y = 1.5 + Math.sin(disp + t) * amp - 15;
     this.pawFL.rotation.z = (Math.cos(t) * Math.PI) / 4;
-
     this.pawFL.position.x = 6 - Math.cos(disp + t) * amp * 2 - 40;
 
     // BACK RIGHT PAW
@@ -489,7 +480,7 @@ export default class Rabbit {
       this.rabbitMesh.rotation.y == rotAngle * -11 ||
       this.rabbitMesh.rotation.y == rotAngle * -15
     ) {
-      this.rabbitMesh.position.z = this.rabbitMesh.position.z + step; //forward
+      this.rabbitMesh.position.z = this.rabbitMesh.position.z + step;
     } else if (
       this.rabbitMesh.rotation.y == 0 ||
       this.rabbitMesh.rotation.y == rotAngle * -4 ||
@@ -556,10 +547,8 @@ export default class Rabbit {
     this.pawFR.position.x = 6 - Math.cos(t) * amp * 2 - 40;
 
     // FRONT LEFT PAW
-
     this.pawFL.position.y = 1.5 + Math.sin(disp + t) * amp - 15;
     this.pawFL.rotation.z = (Math.cos(t) * Math.PI) / 4;
-
     this.pawFL.position.x = 6 - Math.cos(disp + t) * amp * 2 - 40;
 
     // BACK RIGHT PAW
