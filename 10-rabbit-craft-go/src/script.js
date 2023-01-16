@@ -224,7 +224,6 @@ var roundCount = 0;
 
 // 检查边界
 const checkCollision = () => {
-  //COLLISION WITH CARROTS
   for (let i = 0; i < 25; i++) {
     var rabbCarr = rabbit.rabbitMesh.position
       .clone()
@@ -235,7 +234,7 @@ const checkCollision = () => {
     }
   }
 
-  //IF END OF FLOOR
+  // 检查是否是地面的边界
   var rabbFloor = floor.floorMesh.position
     .clone()
     .sub(rabbit.rabbitMesh.position.clone());
