@@ -3,12 +3,12 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min.js";
 import Animations from './environment/animation';
-import Floor from './environment/scenefloor';
+import Island from './environment/island';
 import Carrot from './environment/carrot';
 import Rabbit from './environment/rabbit';
 import Waterfall from './environment/waterfall';
 
-var floor = null;
+var island = null;
 var rabbit = null;
 var carrot = [];
 var waterfall = null;
@@ -80,8 +80,8 @@ scene.add(directionalLight);
 // 创建场景
 const createWorld = () => {
   // 创建地面
-  floor = new Floor();
-  scene.add(floor.floorMesh);
+  island = new Island();
+  scene.add(island.floorMesh);
   // 创建瀑布
   waterfall = new Waterfall(scene);
   scene.add(waterfall.drop);
@@ -173,7 +173,7 @@ const checkCollision = () => {
     }
   }
   // 检查是否是地面的边界
-  var rabbFloor = floor.floorMesh.position.clone().sub(rabbit.rabbitMesh.position.clone());
+  var rabbFloor = island.floorMesh.position.clone().sub(rabbit.rabbitMesh.position.clone());
   if (
     rabbFloor.x <= -900 ||
     rabbFloor.x >= 900 ||
@@ -183,7 +183,7 @@ const checkCollision = () => {
     rabbit.fall();
   }
   // 小河检测
-  var rabbStream = rabbit.rabbitMesh.position.clone().sub(floor.streamMesh.position.clone());
+  var rabbStream = rabbit.rabbitMesh.position.clone().sub(island.streamMesh.position.clone());
   if (
     (rabbStream.x >= -97 &&
       rabbStream.x <= 97 &&

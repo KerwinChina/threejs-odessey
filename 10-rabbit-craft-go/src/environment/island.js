@@ -3,7 +3,7 @@ import Tree from './tree';
 import Bridge from './bridge';
 import LeafTree from './leaftree';
 
-export default class Floor {
+export default class Island {
   constructor() {
     this.floorMesh = new THREE.Group();
     this.generate();
