@@ -7,24 +7,22 @@ export default class Carrot {
   }
 
   generate() {
-    var carrotMat = new THREE.MeshLambertMaterial({
+    const carrotMat = new THREE.MeshLambertMaterial({
       color: 0xd9721e
     });
 
-    var leafMat = new THREE.MeshLambertMaterial({
+    const leafMat = new THREE.MeshLambertMaterial({
       color: 0x339e33
     });
 
-    var bodyGeom = new THREE.CylinderGeometry(5, 3, 12, 4, 1);
+    const bodyGeom = new THREE.CylinderBufferGeometry(5, 3, 12, 4, 1);
     bodyGeom.attributes.position.setY(8, bodyGeom.attributes.position.getY(8) + 2);
     bodyGeom.attributes.position.setY(9, bodyGeom.attributes.position.getY(9) - 3);
     bodyGeom.attributes.position.needsUpdate = true;
 
     this.body = new THREE.Mesh(bodyGeom, carrotMat);
-
-    var leafGeom = new THREE.BoxBufferGeometry(5, 10, 1, 1);
+    const leafGeom = new THREE.BoxBufferGeometry(5, 10, 1, 1);
     leafGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 5, 0));
-
     leafGeom.attributes.position.setX(2, leafGeom.attributes.position.getX(2) - 1);
     leafGeom.attributes.position.setX(3, leafGeom.attributes.position.getX(3) - 1);
     leafGeom.attributes.position.setX(6, leafGeom.attributes.position.getX(6) + 1);

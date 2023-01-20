@@ -11,8 +11,8 @@
 </head>
 <body>
   <canvas class="webgl"></canvas>
-  <h1 class="title">RABBIT CRAFT GO</h1>
-  <div class="mask">
+  <h1 class="title">RABBIT CRAFT GO!</h1>
+  <div class="mask" id="mask">
     <div class="box">
       <div class="keyboard">
         <div class="row"><span class="key">W/↑</span></div>
@@ -20,7 +20,7 @@
         <div class="row"><span class="key space">space</span></div>
       </div>
       <p class="tips"><b>W</b>: 行走&emsp;<b>S</b>: 停止&emsp;<b>A</b>: 向左转&emsp;<b>D</b>: 向右转&emsp;<b>空格键</b>: 跳跃</p>
-      <p class="start"><button class="button">开始</button></p>
+      <p class="start"><button class="button" id="start_button">开始</button></p>
     </div>
   </div>
   <a class='github' href='https://github.com/dragonir/threejs-odessey' target='_blank' rel='noreferrer'>
@@ -29,6 +29,6 @@
     </svg>
     <span class='author'>three.js odessey</span>
   </a>
-
+  <div class="banner"><i></i></div>
 </body>
 </html>

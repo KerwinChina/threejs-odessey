@@ -14,7 +14,7 @@ export default class Bridge {
 
     // 木头
     for (var i = 0; i < 15; i++) {
-      var blockGeom = new THREE.BoxGeometry(10, 3, 70);
+      var blockGeom = new THREE.BoxBufferGeometry(10, 3, 70);
       var block = new THREE.Mesh(blockGeom, woodMat);
       block.position.set(15 * i - 105, -13, 150);
       block.castShadow = true;
@@ -22,7 +22,7 @@ export default class Bridge {
     }
 
     // 桥尾
-    var geometry_rail_v = new THREE.BoxGeometry(3, 20, 3);
+    var geometry_rail_v = new THREE.BoxBufferGeometry(3, 20, 3);
     this.rail_1 = new THREE.Mesh(geometry_rail_v, woodMat);
     this.rail_1.position.set(-90, -6, 180);
     this.rail_1.castShadow = true;
@@ -43,7 +43,7 @@ export default class Bridge {
     rail_4.castShadow = true;
     this.bridgeMesh.add(rail_4);
 
-    var geometry_rail_h = new THREE.BoxGeometry(220, 3, 3);
+    var geometry_rail_h = new THREE.BoxBufferGeometry(220, 3, 3);
     var rail_h1 = new THREE.Mesh(geometry_rail_h, woodMat);
     rail_h1.position.set(0, 5, 180);
     rail_h1.castShadow = true;

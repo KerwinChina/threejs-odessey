@@ -98,14 +98,6 @@ export default class Rabbit {
     this.head.position.y = 30;
     this.head.castShadow = true;
 
-    this.cheekL = new THREE.Mesh(cheekGeom, tailMat);
-    this.cheekL.position.x = -19;
-    this.cheekL.position.y = 19;
-    this.cheekL.position.z = 28;
-
-    this.cheekR = this.cheekL.clone();
-    this.cheekR.position.z = -this.cheekL.position.z;
-
     this.eyeL = new THREE.Mesh(eyeGeom, eyeMat);
     this.eyeL.position.x = -23;
     this.eyeL.position.y = 44;
@@ -253,8 +245,6 @@ export default class Rabbit {
     this.headMesh.add(this.spotR2);
     this.headMesh.add(this.spotR3);
     this.headMesh.add(this.head);
-    this.headMesh.add(this.cheekL);
-    this.headMesh.add(this.cheekR);
     this.headMesh.add(this.nouse);
     this.headMesh.add(this.earL);
     this.headMesh.add(this.earR);

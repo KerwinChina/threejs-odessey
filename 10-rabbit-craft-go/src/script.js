@@ -1,18 +1,22 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-// 地面
+import { TWEEN } from "three/examples/jsm/libs/tween.module.min.js";
+import Animations from './environment/animation';
 import Floor from './environment/scenefloor';
-// 胡罗卜
 import Carrot from './environment/carrot';
-// 兔子
 import Rabbit from './environment/rabbit';
-// 瀑布
 import Waterfall from './environment/waterfall';
 
-import gsap from 'gsap'
-
-console.log(gsap)
+var floor = null;
+var rabbit = null;
+var carrot = [];
+var waterfall = null;
+var drops = [];
+var count = 0;
+var rabbitMoving = false;
+var rabbitJumping = false;
+var rabbitRunning = false;
 
 // 定义渲染尺寸
 const sizes = {
@@ -30,21 +34,18 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.physicallyCorrectLights = true;
-// renderer.toneMapping = THREE.ACESFilmicToneMapping;
-// renderer.toneMappingExposure = 2;
 renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.shadowMapEnabled = true;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.needsUpdate = true;
 
 // 初始化场景
 const scene = new THREE.Scene();
 // 初始化相机
-const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 1, 3000)
-camera.position.set(0, 250, 2000);
-camera.lookAt(new THREE.Vector3(0 , 0, 0));
+const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 1, 5000)
+camera.position.set(-2000, -250, 2000);
 // 镜头控制器
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0, 0);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.dampingFactor = 0.15;
@@ -64,7 +65,6 @@ window.addEventListener('resize', () => {
 // 光照
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
-
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
 directionalLight.castShadow = true;
 directionalLight.shadow.camera.far = 20000;
@@ -77,56 +77,28 @@ directionalLight.shadow.camera.right = 800;
 directionalLight.position.set(600, 1200, 800);
 scene.add(directionalLight);
 
-const cubeGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
-const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
-const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-cube.position.set(0, 0, 0);
-
-directionalLight.target = cube;
-
-
-var helper = new THREE.DirectionalLightHelper(directionalLight, 500, 0xff0000);
-scene.add(helper)
-
-// const grid = new THREE.GridHelper(2000, 2000, 0x000000, 0x000000);
-// grid.position.set(0, 0, 0);
-// grid.material.transparent = true;
-// grid.material.opacity = 0.1;
-// scene.add(grid);
-
 // 创建场景
-var floor = null;
-var rabbit = null;
-var carrot = [];
-var waterfall = null;
 const createWorld = () => {
   // 创建地面
   floor = new Floor();
   scene.add(floor.floorMesh);
-  // 创建兔子
-  rabbit = new Rabbit();
-  scene.add(rabbit.rabbitMesh);
-  rabbit.nod();
-
-  // 创建胡罗卜
-  for (let i = 0; i < 25; i++) {
-    carrot[i] = new Carrot();
-    scene.add(carrot[i].carrotMesh);
-  }
-
   // 创建瀑布
   waterfall = new Waterfall(scene);
   scene.add(waterfall.drop);
+  // 创建兔子
+  rabbit = new Rabbit();
+  camera.lookAt(rabbit.rabbitMesh.position);
+  scene.add(rabbit.rabbitMesh);
+  rabbit.nod();
+  // 创建胡罗卜
+  for (let i = 0; i < 20; i++) {
+    carrot[i] = new Carrot();
+    scene.add(carrot[i].carrotMesh);
+    carrot[i].carrotMesh.position.set(-170 * Math.random() * 3 - 300, -12, 1400 * Math.random() * 1.2 - 900);
+  }
 }
 
-createWorld();
-
-var clock = new THREE.Clock();
-
-var rabbitRunning = false;
-var rabbitMoving = false;
-var rabbitJumping = false;
-
+// 兔子控制
 const rabbitControl = {
   tureLeft: () => {
     rabbit && (rabbit.rabbitMesh.rotation.y -= Math.PI / 2);
@@ -141,11 +113,9 @@ const rabbitControl = {
   },
 }
 
-
 // 键盘监听
 document.addEventListener('keydown', e => {
   if (e && e.keyCode) {
-    console.log(e.keyCode)
     switch(e.keyCode) {
       // 左
       case 65:
@@ -190,54 +160,20 @@ document.addEventListener('keyup', e => {
         break;
     }
   }
-})
-
-var isGetCarrot = false;
-var toggleSetCarrot = true;
-
-const setCarrot = () => {
-  if (toggleSetCarrot === true) {
-    setTimeout(() => {
-      carrot.forEach(carrot => {
-        carrot.carrotMesh.position.set(
-          170 * Math.random() * 3 + 300,
-          -12,
-          1400 * Math.random() * 1.2 - 900
-        );
-      });
-    }, 500);
-  }
-}
-
-setCarrot();
-
-const getCarrot = (i, x) => {
-  setTimeout(() => {
-    rabbit.jump();
-  }, 500);
-  carrot[i].carrotMesh.position.set(0 + x, -10, 910);
-}
-
-var carrots = [];
-var roundCount = 0;
-
+});
 
 // 检查边界
 const checkCollision = () => {
-  for (let i = 0; i < 25; i++) {
-    var rabbCarr = rabbit.rabbitMesh.position
-      .clone()
-      .sub(carrot[i].carrotMesh.position.clone());
-    if (rabbCarr.length() <= 25) {
-      getCarrot(i, i * 20);
-      carrots.push(carrot[i].carrotMesh);
+  for (let i = 0; i < 20; i++) {
+    let rabbCarr = rabbit.rabbitMesh.position.clone().sub(carrot[i].carrotMesh.position.clone());
+    if (rabbCarr.length() <= 20) {
+      rabbit.jump();
+      scene.remove(carrot[i].carrotMesh);
+      rabbCarr = null;
     }
   }
-
   // 检查是否是地面的边界
-  var rabbFloor = floor.floorMesh.position
-    .clone()
-    .sub(rabbit.rabbitMesh.position.clone());
+  var rabbFloor = floor.floorMesh.position.clone().sub(rabbit.rabbitMesh.position.clone());
   if (
     rabbFloor.x <= -900 ||
     rabbFloor.x >= 900 ||
@@ -246,10 +182,8 @@ const checkCollision = () => {
   ) {
     rabbit.fall();
   }
-  //IF END OF STREAM
-  var rabbStream = rabbit.rabbitMesh.position
-    .clone()
-    .sub(floor.streamMesh.position.clone());
+  // 小河检测
+  var rabbStream = rabbit.rabbitMesh.position.clone().sub(floor.streamMesh.position.clone());
   if (
     (rabbStream.x >= -97 &&
       rabbStream.x <= 97 &&
@@ -260,29 +194,6 @@ const checkCollision = () => {
     rabbit.fall();
   }
 }
-
-const checkPlay = arr => {
-  let count = roundCount;
-  if (arr.length === 2) {
-    roundCount++;
-    for (let i = 0; i <= 2; i++) {
-      arr.shift(arr[i]);
-    }
-  }
-  if (roundCount > count) {
-    return (toggleSetCarrot = true);
-  }
-  if ((toggleSetCarrot = true)) {
-    setTimeout(() => {
-      count++;
-    }, 1200);
-  }
-  return (toggleSetCarrot = false);
-}
-
-var drops = [];
-var count = 0;
-
 
 // 动画
 const tick = () => {
@@ -296,7 +207,6 @@ const tick = () => {
     rabbit.killNod();
     rabbit.run();
   }
-
   // 瀑布动画
   if (count % 3 == 0) {
     for (let i = 0; i < 7; i++) {
@@ -311,11 +221,18 @@ const tick = () => {
       drops.splice(i, 1);
     }
   }
-
-  checkPlay(carrots);
-
+  TWEEN && TWEEN.update();
   controls && controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(tick);
 }
+
+const startButton = document.getElementById('start_button');
+const mask = document.getElementById('mask');
+startButton.addEventListener('click', () => {
+  mask.style.display = 'none';
+  Animations.animateCamera(camera, controls, { x: 50, y: 120, z: 1000 }, { x: 0, y: 0, z: 0 }, 3600, () => {});
+});
+
+createWorld();
 tick();
