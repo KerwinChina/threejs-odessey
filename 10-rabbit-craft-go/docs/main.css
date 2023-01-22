@@ -14,7 +14,7 @@ body {
   width: 100%;
   overflow: hidden;
   background: #1FA2FF;
-  background: -webkit-linear-gradient(to top, #A6FFCB, #12D8FA, #1FA2FF);
+  background: -webkit-linear-gradient(to top, #f7f303, #12D8FA, #1FA2FF);
   background: linear-gradient(to top, #f7f303, #12D8FA, #1FA2FF);
 }
 
@@ -177,6 +177,30 @@ h1.title {
   position: absolute;
   bottom: 0;
   filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, .1));
+}
+
+@media only screen and (max-width: 840px) {
+  h1.title {
+    font-size: 3rem;
+  }
+  .mask .box {
+    transform: scale(.6);
+  }
+  .banner {
+    transform: scale(.5);
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  h1.title {
+    display: none;
+  }
+  .mask .box {
+    transform: scale(.4);
+  }
+  .banner {
+    display: none;
+  }
 }
 
 /*# sourceMappingURL=main.css.map*/
