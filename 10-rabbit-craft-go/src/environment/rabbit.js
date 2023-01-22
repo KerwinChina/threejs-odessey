@@ -48,45 +48,40 @@ export default class Rabbit {
       color: 0xbf6970
     });
 
-    var bodyGeom = new THREE.BoxGeometry(50, 50, 42, 1);
-    var headGeom = new THREE.BoxGeometry(44, 44, 54, 1);
-    var cheekGeom = new THREE.BoxGeometry(20, 20, 5, 1);
-
-    var earGeom = new THREE.BoxGeometry(5, 60, 10, 1);
+    var bodyGeom = new THREE.BoxBufferGeometry(50, 50, 42, 1);
+    var headGeom = new THREE.BoxBufferGeometry(44, 44, 54, 1);
+    var earGeom = new THREE.BoxBufferGeometry(5, 60, 10, 1);
     earGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 5, 0));
-    // earGeom.vertices[1].z += -7;
-    // earGeom.vertices[4].z += -7;
-    // earGeom.vertices[5].z += +1;
-    // earGeom.vertices[7].z += +1;
-    // earGeom.vertices[5].x += -5;
-    // earGeom.vertices[1].x += +5;
+    earGeom.attributes.position.setZ(1, earGeom.attributes.position.getZ(1) - 7);
+    earGeom.attributes.position.setZ(4, earGeom.attributes.position.getZ(4) - 7);
+    earGeom.attributes.position.setZ(5, earGeom.attributes.position.getZ(5) + 1);
+    earGeom.attributes.position.setX(1, earGeom.attributes.position.getX(1) + 5);
+    earGeom.attributes.position.setX(5, earGeom.attributes.position.getX(5) - 5);
 
-    var eyeGeom = new THREE.BoxGeometry(20, 20, 8, 1);
-    var irisGeom = new THREE.BoxGeometry(8, 8, 8, 1);
+    var eyeGeom = new THREE.BoxBufferGeometry(20, 20, 8, 1);
+    var irisGeom = new THREE.BoxBufferGeometry(8, 8, 8, 1);
+    var mouthGeom = new THREE.BoxBufferGeometry(8, 16, 4, 1);
+    var mustacheGeom = new THREE.BoxBufferGeometry(0.5, 1, 22, 1);
+    var spotGeom = new THREE.BoxBufferGeometry(1, 1, 1, 1);
+    var legGeom = new THREE.BoxBufferGeometry(33, 33, 10, 1);
+    var pawGeom = new THREE.BoxBufferGeometry(45, 10, 10, 1);
+    pawGeom.attributes.position.setZ(2, pawGeom.attributes.position.getZ(2) - 1);
+    pawGeom.attributes.position.setZ(3, pawGeom.attributes.position.getZ(3) + 1);
+    pawGeom.attributes.position.setZ(4, pawGeom.attributes.position.getZ(4) - 3);
+    pawGeom.attributes.position.setY(4, pawGeom.attributes.position.getY(4) + 3);
+    pawGeom.attributes.position.setZ(5, pawGeom.attributes.position.getZ(5) + 3);
+    pawGeom.attributes.position.setY(5, pawGeom.attributes.position.getY(5) + 3);
+    pawGeom.attributes.position.setZ(6, pawGeom.attributes.position.getZ(6) - 3);
+    pawGeom.attributes.position.setZ(7, pawGeom.attributes.position.getZ(7) + 3);
 
-    var mouthGeom = new THREE.BoxGeometry(8, 16, 4, 1);
+    var pawFGeom = new THREE.BoxBufferGeometry(20, 20, 20, 1);
 
-    var mustacheGeom = new THREE.BoxGeometry(0.5, 1, 22, 1);
-    var spotGeom = new THREE.BoxGeometry(1, 1, 1, 1);
-
-    var legGeom = new THREE.BoxGeometry(33, 33, 10, 1);
-    var pawGeom = new THREE.BoxGeometry(45, 10, 10, 1);
-    // pawGeom.vertices[2].z -= 1;
-    // pawGeom.vertices[3].z += 1;
-    // pawGeom.vertices[4].z -= 3;
-    // pawGeom.vertices[4].y += 3;
-    // pawGeom.vertices[5].z += 3;
-    // pawGeom.vertices[5].y += 3;
-    // pawGeom.vertices[6].z -= 3;
-    // pawGeom.vertices[7].z += 3;
-    var pawFGeom = new THREE.BoxGeometry(20, 20, 20, 1);
-
-    var tailGeom = new THREE.BoxGeometry(20, 20, 20, 1);
+    var tailGeom = new THREE.BoxBufferGeometry(20, 20, 20, 1);
     tailGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -2));
 
-    var nouseGeom = new THREE.BoxGeometry(20, 20, 15, 1);
+    var nouseGeom = new THREE.BoxBufferGeometry(20, 20, 15, 1);
 
-    var tailGeom = new THREE.BoxGeometry(23, 23, 23, 1);
+    var tailGeom = new THREE.BoxBufferGeometry(23, 23, 23, 1);
     tailGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0, -2));
 
     this.body = new THREE.Mesh(bodyGeom, bodyMat);
@@ -311,21 +306,18 @@ export default class Rabbit {
       yoyo: true,
       repeat: 1
     });
-
     TweenMax.to(this.tail.rotation, totalSpeed / 2, {
       z: "+=1",
       ease: Back.easeOut,
       yoyo: true,
       repeat: 1
     });
-
     TweenMax.to(this.mouth.rotation, totalSpeed / 2, {
       z: 0.5,
       ease: Back.easeOut,
       yoyo: true,
       repeat: 1
     });
-
     TweenMax.to(this.rabbitMesh.position, totalSpeed / 2, {
       y: jumpHeight,
       ease: Back.easeInOut,
@@ -338,8 +330,7 @@ export default class Rabbit {
   nod() {
     var _this = this;
     var sp = 0.5 + Math.random();
-
-    // HEAD
+    // 头
     var tHeadRotY = -Math.PI / 6 + (Math.random() * Math.PI) / 3;
     TweenMax.to(this.headMesh.rotation, sp, {
       y: tHeadRotY,
@@ -348,11 +339,9 @@ export default class Rabbit {
         _this.nod();
       }
     });
-
-    // EARS
+    // 耳朵
     var tEarLRotZ = (Math.random() * Math.PI) / 8;
     var tEarRRotZ = (Math.random() * Math.PI) / 8;
-
     TweenMax.to(this.earL.rotation, sp, {
       z: tEarLRotZ,
       ease: Power4.easeInOut
@@ -361,23 +350,20 @@ export default class Rabbit {
       z: tEarRRotZ,
       ease: Power4.easeInOut
     });
-
-    // MOUTH
+    // 嘴
     var tMouthRot = (Math.random() * Math.PI) / 8;
     TweenMax.to(this.mouth.rotation, sp, {
       z: tMouthRot,
       ease: Power1.easeInOut
     });
-
-    //NOUSE
+    // 鼻子
     TweenMax.to([this.nouse.scale], sp / 8, {
       y: 0.6,
       ease: Elastic.easeInOut,
       yoyo: true,
       repeat: 3
     });
-
-    //EYES
+    // 眼睛
     if (Math.random() > 0.2)
       TweenMax.to([this.eyeR.scale, this.eyeL.scale], sp / 8, {
         y: 0,
@@ -398,51 +384,39 @@ export default class Rabbit {
     var t = this.runningCycle;
     var amp = 4;
     var disp = 0.2;
-
-    // BODY
+    // 身体
     this.rabbitMesh.position.y = 6 + Math.sin(t - Math.PI / 2) * amp;
     this.rabbitMesh.rotation.z = 0.2 + Math.sin(t - Math.PI / 2) * amp * 0.1;
     this.bodyMesh.rotation.z = Math.sin(t - Math.PI / 2) * amp * 0.1;
     this.bodyMesh.position.y = 7 + Math.sin(t - Math.PI / 2) * amp * 0.5;
-
-    // MOUTH
+    // 嘴
     this.mouth.rotation.z = Math.PI / 16 + Math.cos(t) * amp * 0.05;
-
-    // HEAD
+    // 头
     this.headMesh.position.x = 2 + Math.sin(t - Math.PI / 2) * amp * 0.5;
     this.headMesh.position.y = 8 + Math.cos(t - Math.PI / 2) * amp * 0.7;
     this.headMesh.rotation.z = -0.2 + Math.sin(t + Math.PI) * amp * 0.1;
-
-    // EARS
+    // 耳朵
     this.earL.rotation.z = Math.cos(-Math.PI / 2 + t) * (amp * 0.2) * 0.3;
     this.earR.rotation.z = Math.cos(-Math.PI / 2 + 0.2 + t) * (amp * 0.3) * 0.3;
-    // EYES
-    this.eyeR.scale.y = this.eyeL.scale.y =
-      0.5 + Math.abs(Math.cos(-Math.PI / 4 + t * 0.5)) * 0.6;
-
-    // TAIL
+    // 眼睛
+    this.eyeR.scale.y = this.eyeL.scale.y = 0.5 + Math.abs(Math.cos(-Math.PI / 4 + t * 0.5)) * 0.6;
+    // 尾巴
     this.tail.rotation.z = Math.cos(Math.PI / 2 + t) * amp * 0.3;
-
-    // FRONT RIGHT PAW
+    // 前右爪
     this.pawFR.position.y = 1.5 + Math.sin(t) * amp - 15;
     this.pawFR.rotation.z = (Math.cos(t) * Math.PI) / 4;
     this.pawFR.position.x = 6 - Math.cos(t) * amp * 2 - 40;
-
-    // FRONT LEFT PAW
+    // 前左爪
     this.pawFL.position.y = 1.5 + Math.sin(disp + t) * amp - 15;
     this.pawFL.rotation.z = (Math.cos(t) * Math.PI) / 4;
     this.pawFL.position.x = 6 - Math.cos(disp + t) * amp * 2 - 40;
-
-    // BACK RIGHT PAW
+    // 后右爪
     this.pawBR.position.y = 1.5 + Math.sin(Math.PI + t) * amp - 30;
     this.pawBR.rotation.z = (Math.cos(t + Math.PI * 1.5) * Math.PI) / 3;
-
     this.pawBR.position.x = -Math.cos(Math.PI + t) * amp + 10;
-
-    // BACK LEFT PAW
+    // 后左爪
     this.pawBL.position.y = 1.5 + Math.sin(Math.PI + t) * amp - 30;
     this.pawBL.rotation.z = (Math.cos(t + Math.PI * 1.5) * Math.PI) / 3;
-
     this.pawBL.position.x = -Math.cos(Math.PI + t) * amp + 10;
   }
 
@@ -459,7 +433,7 @@ export default class Rabbit {
     var amp = 4;
     var disp = 0.2;
     var rotAngle = 1.5707963267948966;
-    // BODY
+    // 身体
     if (
       this.rabbitMesh.rotation.y == rotAngle ||
       this.rabbitMesh.rotation.y == rotAngle * 5 ||
@@ -481,7 +455,7 @@ export default class Rabbit {
       this.rabbitMesh.rotation.y == rotAngle * 12 ||
       this.rabbitMesh.rotation.y == rotAngle * 16
     ) {
-      this.rabbitMesh.position.x = this.rabbitMesh.position.x - step; // to right
+      this.rabbitMesh.position.x = this.rabbitMesh.position.x - step;
     } else if (
       this.rabbitMesh.rotation.y == -rotAngle ||
       this.rabbitMesh.rotation.y == rotAngle * -5 ||
@@ -492,7 +466,7 @@ export default class Rabbit {
       this.rabbitMesh.rotation.y == rotAngle * 11 ||
       this.rabbitMesh.rotation.y == rotAngle * 15
     ) {
-      this.rabbitMesh.position.z = this.rabbitMesh.position.z - step; // back
+      this.rabbitMesh.position.z = this.rabbitMesh.position.z - step;
     } else if (
       this.rabbitMesh.rotation.y == rotAngle * -2 ||
       this.rabbitMesh.rotation.y == rotAngle * -6 ||
@@ -503,7 +477,7 @@ export default class Rabbit {
       this.rabbitMesh.rotation.y == rotAngle * 10 ||
       this.rabbitMesh.rotation.y == rotAngle * 14
     ) {
-      this.rabbitMesh.position.x = this.rabbitMesh.position.x + step; //to left
+      this.rabbitMesh.position.x = this.rabbitMesh.position.x + step;
     } else {
       alert("你旋转得太多了！兔子可能会感到头晕");
       this.rabbitMesh.rotation.y = rotAngle;
@@ -511,46 +485,34 @@ export default class Rabbit {
 
     this.rabbitMesh.position.y = 6 + Math.sin(t - Math.PI / 2) * amp;
     this.rabbitMesh.rotation.z = 0.2 + Math.sin(t - Math.PI / 2) * amp * 0.1;
-
     this.bodyMesh.rotation.z = Math.sin(t - Math.PI / 2) * amp * 0.1;
     this.bodyMesh.position.y = 7 + Math.sin(t - Math.PI / 2) * amp * 0.5;
-
-    // HEAD
+    // 头
     this.headMesh.position.x = 2 + Math.sin(t - Math.PI / 2) * amp * 0.5;
     this.headMesh.position.y = 8 + Math.cos(t - Math.PI / 2) * amp * 0.7;
     this.headMesh.rotation.z = -0.2 + Math.sin(t + Math.PI) * amp * 0.1;
-
-    // EARS
+    // 耳朵
     this.earL.rotation.z = Math.cos(-Math.PI / 2 + t) * (amp * 0.2) * 0.3;
     this.earR.rotation.z = Math.cos(-Math.PI / 2 + 0.2 + t) * (amp * 0.3) * 0.3;
-    // EYES
-    this.eyeR.scale.y = this.eyeL.scale.y =
-      0.5 + Math.abs(Math.cos(-Math.PI / 4 + t * 0.5)) * 0.6;
-
-    // TAIL
+    // 眼睛
+    this.eyeR.scale.y = this.eyeL.scale.y = 0.5 + Math.abs(Math.cos(-Math.PI / 4 + t * 0.5)) * 0.6;
+    // 尾巴
     this.tail.rotation.z = Math.cos(Math.PI / 2 + t) * amp * 0.3;
-
-    // FRONT RIGHT PAW
+    // 前右爪
     this.pawFR.position.y = 1.5 + Math.sin(t) * amp - 15;
     this.pawFR.rotation.z = (Math.cos(t) * Math.PI) / 4;
-
     this.pawFR.position.x = 6 - Math.cos(t) * amp * 2 - 40;
-
-    // FRONT LEFT PAW
+    // 前左爪
     this.pawFL.position.y = 1.5 + Math.sin(disp + t) * amp - 15;
     this.pawFL.rotation.z = (Math.cos(t) * Math.PI) / 4;
     this.pawFL.position.x = 6 - Math.cos(disp + t) * amp * 2 - 40;
-
-    // BACK RIGHT PAW
+    // 后右爪
     this.pawBR.position.y = 1.5 + Math.sin(Math.PI + t) * amp - 30;
     this.pawBR.rotation.z = (Math.cos(t + Math.PI * 1.5) * Math.PI) / 3;
-
     this.pawBR.position.x = -Math.cos(Math.PI + t) * amp + 10;
-
-    // BACK LEFT PAW
+    // 后左爪
     this.pawBL.position.y = 1.5 + Math.sin(Math.PI + t) * amp - 30;
     this.pawBL.rotation.z = (Math.cos(t + Math.PI * 1.5) * Math.PI) / 3;
-
     this.pawBL.position.x = -Math.cos(Math.PI + t) * amp + 10;
   }
 
@@ -591,29 +553,24 @@ export default class Rabbit {
     this.headMesh.position.y;
     this.earL.rotation.z = -0.4;
     this.earR.rotation.z = -0.1;
-    // EYES
+    // 眼睛
     this.eyeR.scale.y = 1;
     this.eyeL.scale.y = 1;
-    // TAIL
+    // 尾巴
     this.tail.rotation.z = Math.PI * 2;
-
-    // FRONT RIGHT PAW
+    // 前右爪
     this.pawFR.position.y = -7;
     this.pawFR.rotation.z = Math.PI * 2;
-
     this.pawFR.position.x = -30;
-
-    // FRONT LEFT PAW
+    // 前左爪
     this.pawFL.position.y = -7;
     this.pawFL.rotation.z = Math.PI * 2;
     this.pawFL.position.x = -30;
-
-    // BACK RIGHT PAW
+    // 后右爪
     this.pawBR.position.y = -27;
     this.pawBR.rotation.z = 0.1;
     this.pawBR.position.x = 5;
-
-    // BACK LEFT PAW
+    // 后左爪
     this.pawBL.position.y = -27;
     this.pawBL.rotation.z = 0.1;
     this.pawBL.position.x = 5;

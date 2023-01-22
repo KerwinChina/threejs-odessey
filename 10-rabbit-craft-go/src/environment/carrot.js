@@ -19,8 +19,8 @@ export default class Carrot {
     bodyGeom.attributes.position.setY(8, bodyGeom.attributes.position.getY(8) + 2);
     bodyGeom.attributes.position.setY(9, bodyGeom.attributes.position.getY(9) - 3);
     bodyGeom.attributes.position.needsUpdate = true;
-
     this.body = new THREE.Mesh(bodyGeom, carrotMat);
+    // 叶子
     const leafGeom = new THREE.BoxBufferGeometry(5, 10, 1, 1);
     leafGeom.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 5, 0));
     leafGeom.attributes.position.setX(2, leafGeom.attributes.position.getX(2) - 1);

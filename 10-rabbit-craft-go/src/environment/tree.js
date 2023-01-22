@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 
-
 export default class Tree {
   constructor(x, y, z) {
     this.x = x;

@@ -31,19 +31,19 @@ export default class Island {
     })
 
     // 顶部棱柱
-    const topFieldGeom = new THREE.CylinderGeometry(1200, 900, 200, 4, 4);
+    const topFieldGeom = new THREE.CylinderBufferGeometry(1200, 900, 200, 4, 4);
     this.topFieldMesh = new THREE.Mesh(topFieldGeom, mapCapMat);
     this.topFieldMesh.position.set(0, -200, 0);
     this.topFieldMesh.rotation.y = - Math.PI / 4;
 
     // 中间棱柱
-    const middleFieldGeom = new THREE.CylinderGeometry(850, 600, 200, 4, 4);
+    const middleFieldGeom = new THREE.CylinderBufferGeometry(850, 600, 200, 4, 4);
     this.middleFieldMesh = new THREE.Mesh(middleFieldGeom, mapCapMat);
     this.middleFieldMesh.position.set(0, -450, 0);
     this.middleFieldMesh.rotation.y = - Math.PI / 4;
 
     // 底部棱锥
-    const bottomFieldGeom = new THREE.ConeGeometry(550, 400, 4);
+    const bottomFieldGeom = new THREE.ConeBufferGeometry(550, 400, 4);
     this.bottomFieldMesh = new THREE.Mesh(bottomFieldGeom, mapCapMat);
     this.bottomFieldMesh.position.set(0, -800, 0);
     this.bottomFieldMesh.rotation.z = - Math.PI;
@@ -54,7 +54,7 @@ export default class Island {
       color: 0x75bd2d,
       side: THREE.DoubleSide,
     });
-    const strCroundGeom = new THREE.BoxGeometry(205, 10, 1800);
+    const strCroundGeom = new THREE.BoxBufferGeometry(205, 10, 1800);
     this.strGroundMesh = new THREE.Mesh(strCroundGeom, strGroundMat);
     this.strGroundMesh.position.set(0, -40, 0);
 
@@ -63,7 +63,7 @@ export default class Island {
       color: 0x0941ba,
       side: THREE.DoubleSide,
     });
-    const streamGeom = new THREE.BoxGeometry(200, 16, 1800);
+    const streamGeom = new THREE.BoxBufferGeometry(200, 16, 1800);
     this.streamMesh = new THREE.Mesh(streamGeom, streamMat);
     this.streamMesh.position.set(0, -32, 0);
 
