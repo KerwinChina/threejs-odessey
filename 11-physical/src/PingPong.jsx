@@ -20,7 +20,7 @@ function Paddle() {
   const { nodes, materials } = useLoader(
     GLTFLoader,
     "/models/pingpong.glb",
-    extensions
+    // extensions
   );
   const { pong } = useStore((state) => state.api);
   const welcome = useStore((state) => state.welcome);
@@ -165,7 +165,7 @@ export default function PingPong() {
       >
         <mesh position={[0, 0, -10]} receiveShadow>
           <planeGeometry args={[1000, 1000]} />
-          <meshPhongMaterial color="#172017" />
+          <meshPhongMaterial color="#5081ca" />
         </mesh>
         <ContactGround />
         {!welcome && <Ball />}

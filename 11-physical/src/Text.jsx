@@ -4,11 +4,11 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import fontJson from "../public/fonts/firasans_regular.json";
 
 const font = new FontLoader().parse(fontJson);
-const geom = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].map(
+const geom = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].map(
   (number) => new TextGeometry(number, { font, height: 0.1, size: 5 })
 );
 
-export default function Text({ color = "white", count, ...props }) {
+export default function Text({ color = 0xffffff, count, ...props }) {
   const array = useMemo(() => [...count], [count]);
   return (
     <group {...props} dispose={null}>
