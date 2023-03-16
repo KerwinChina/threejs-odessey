@@ -6,7 +6,7 @@ body,
   left: 0;
   width: 100%;
   height: 100%;
-  background: ivory;
+  background: linear-gradient(to bottom left, #285c9f, #5c92ce)
 }
 
 .github {
