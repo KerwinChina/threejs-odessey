@@ -1,0 +1,48 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -webkit-overflow-scroll:touch
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+*::-webkit-scrollbar {
+  width: 4px !important;
+  background: 0 0 !important;
+  cursor: pointer !important
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 200, 200, .2) !important;
+  border-radius: 4px !important;
+  border-color: transparent !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+  background-clip: padding-box !important
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: rgba(200, 200, 200, .2) !important
+}
+
+*::-webkit-scrollbar-thumb:active,
+body.platform-win32 ::-webkit-scrollbar-thumb:hover {
+  border-width: 1px !important;
+  background-color: rgba(200, 200, 200, .2) !important;
+  cursor: pointer !important
+}
