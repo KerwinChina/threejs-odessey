@@ -5,11 +5,6 @@ export const resourceList = [
   new URL('@/assets/images/map/map_living_room.png', import.meta.url).href,
   new URL('@/assets/images/map/map_home.png', import.meta.url).href,
 
-  new URL('@/assets/images/sprites/mascot_float.png', import.meta.url).href,
-  new URL('@/assets/images/sprites/mascot_bye.png', import.meta.url).href,
-  new URL('@/assets/images/sprites/mascot_hi.png', import.meta.url).href,
-  new URL('@/assets/images/sprites/mascot_talk.png', import.meta.url).href,
-
   // home
   new URL('@/assets/images/home/logo.png', import.meta.url).href,
   new URL('@/assets/images/home/icon_community.png', import.meta.url).href,

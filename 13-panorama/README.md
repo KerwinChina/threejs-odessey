@@ -1,5 +1,4 @@
-# Digital 3D H5 Template
-
+# three.js odessey
 
 ## 构建
 

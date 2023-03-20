@@ -1,5 +1,5 @@
 {
-  "name": "smart-home-tour",
+  "name": "panorama-advanced",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -11,8 +11,6 @@
   "dependencies": {
     "amfe-flexible": "^2.2.1",
     "gsap": "^3.11.4",
-    "js-cloudimage-360-view": "^3.0.4",
-    "lerp": "^1.0.3",
     "lil-gui": "^0.16.1",
     "mitt": "^3.0.0",
     "stats.js": "^0.17.0",

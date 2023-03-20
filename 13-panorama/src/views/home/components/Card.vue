@@ -3,7 +3,6 @@
     <div class="box">
       <div class="top">
         <div class="left">
-          <Mascot type="talk" :position="{'bottom': '-50px', 'left': 0}" />
         </div>
         <div class="right">
           <span class="name">
@@ -43,7 +42,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import { Bus } from '@/utils/index';
-import Mascot from '@/views/family/components/Mascot.vue';
 
 const data = reactive({
   visible: false,

@@ -10,14 +10,7 @@ const routes = [
     path: '/home',
     component: () => import('@/views/home/index.vue'),
     meta: {
-      title: '',
-    },
-  },
-  {
-    path: '/family',
-    component: () => import('@/views/family/index.vue'),
-    meta: {
-      title: '',
+      title: 'panorama',
     },
   },
 ];
