@@ -6,7 +6,6 @@
         <b class="text">全景漫游</b>
       </span>
     </div>
-    <Slider :sliders="data.sliders" />
     <Card />
     <!-- 场景切换点 -->
     <div class="switch">
@@ -56,7 +55,6 @@ import { useRouter } from 'vue-router';
 import * as THREE from 'three';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 import { OrbitControls } from '@/utils/OrbitControls.js';
-import Slider from '@/views/home/components/Slider.vue';
 import Card from '@/views/home/components/Card.vue';
 import Animations from '@/utils/animations';
 import { Bus, sleep } from '@/utils';
@@ -71,8 +69,6 @@ const data = reactive({
   controls: null,
   cameraZAxis: 6,
   currentRoom: 'living-room',
-  sliders: rooms[0].sliders,
-  currentKeyframe: 'hi',
   keyframeTimeout: null,
 });
 
@@ -228,8 +224,6 @@ const initScene = () => {
 // 点击切换场景
 const handleSwitchButtonClick = async (key) => {
   const room = rooms.filter((item) => item.key === key)[0];
-  /* eslint-disable-next-line */
-  // debugger
   if (data.camera) {
     const x = room.position.x;
     const y = room.position.y;
