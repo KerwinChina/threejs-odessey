@@ -55,6 +55,7 @@ onMounted(() => {
   display flex
   align-items center
   justify-content space-around
+  display none
   .progress
     display inline-block
     font-size 64px

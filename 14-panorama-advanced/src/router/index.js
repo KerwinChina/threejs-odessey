@@ -13,20 +13,6 @@ const routes = [
       title: '',
     },
   },
-  {
-    path: '/family',
-    component: () => import('@/views/family/index.vue'),
-    meta: {
-      title: '',
-    },
-  },
-  {
-    path: '/country',
-    component: () => import('@/views/country/index.vue'),
-    meta: {
-      title: '',
-    },
-  },
 ];
 
 const router = createRouter({

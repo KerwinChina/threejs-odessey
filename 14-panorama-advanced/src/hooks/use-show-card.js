@@ -1,5 +1,5 @@
 import { getCurrentInstance } from 'vue';
-import cardModalComponent from '../views/family/components/cardModal.vue';
+import cardModalComponent from '@/views/home/components/cardModal.vue';
 
 export default function () {
   const { proxy: ctx } = getCurrentInstance();
