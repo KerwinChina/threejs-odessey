@@ -3,8 +3,7 @@
     <canvas class="webgl"></canvas>
     <div class="back" @click="handleBackClick">
       <span class="button" title="返回" role="button">
-        <i class="icon"></i>
-        <b class="text">回到主页</b>
+        <b class="text">全景漫游</b>
       </span>
     </div>
     <Slider :sliders="data.sliders" />
@@ -17,14 +16,24 @@
       </span>
     </div>
     <!-- 交互点 -->
-    <div class="point" v-for="(point, index) in data.pointInfos" :key="index" :class="[`point-${index}`, `point-${point.key}`]" @click="handleReactivePointClick(point)">
+    <div
+      class="point"
+      v-for="(point, index) in interactivePoints"
+      :key="index"
+      :class="[`point-${index}`, `point-${point.key}`]"
+      @click="handleReactivePointClick(point)"
+      v-show="point.room === data.currentRoom"
+    >
       <div class="label" :class="[`label-${index}`, `label-${point.key}`]">
         <label class="label-tips">
           <div class="cover">
-            <i class="icon" :style="{
-              'background': `url(${point.cover}) no-repeat center`,
-              'background-size': 'contain',
-            }"></i>
+            <i
+              class="icon"
+              :style="{
+                background: `url(${point.cover}) no-repeat center`,
+                'background-size': 'contain',
+              }"
+            ></i>
           </div>
           <div class="info">
             <p class="p1">{{ point.name }}</p>
@@ -38,10 +47,10 @@
 
 <script setup>
 import {
-  computed,
   onMounted,
   reactive,
   onBeforeUnmount,
+  computed,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import * as THREE from 'three';
@@ -51,7 +60,7 @@ import Slider from '@/views/home/components/Slider.vue';
 import Card from '@/views/home/components/Card.vue';
 import Animations from '@/utils/animations';
 import { Bus, sleep } from '@/utils';
-import rooms from '@/views/home/data';
+import { rooms } from '@/views/home/data';
 
 const router = useRouter();
 
@@ -65,6 +74,27 @@ const data = reactive({
   sliders: rooms[0].sliders,
   currentKeyframe: 'hi',
   keyframeTimeout: null,
+});
+
+// 获取交互点的信息
+const interactivePoints = computed(() => {
+  const res = [];
+  rooms.forEach((room) => {
+    if (room.interactivePoints && room.interactivePoints.length > 0) {
+      room.interactivePoints.forEach((point) => {
+        if (room.sliders) {
+          const slider = room.sliders.filter((_slider) => _slider.name === point.value)[0];
+          point = {
+            room: room.key,
+            ...point,
+            ...slider,
+          };
+          res.push(point);
+        }
+      });
+    }
+  });
+  return res;
 });
 
 // 点击返回
@@ -107,9 +137,6 @@ const initScene = () => {
   // 垂直旋转限制
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
-  // 限制水平移动
-  controls.maxAzimuthAngle = Math.PI - 1.8;
-  controls.minAzimuthAngle = -Math.PI + 1.8;
   data.controls = controls;
 
   // 环境光
@@ -132,7 +159,7 @@ const initScene = () => {
 
   // 创建空间
   const createRoom = (name, position, map) => {
-    const geometry = new THREE.SphereGeometry(16, 64, 64);
+    const geometry = new THREE.SphereGeometry(16, 128, 128);
     geometry.scale(1, 1, -1);
     const material = new THREE.MeshBasicMaterial({
       map: textLoader.load(map),
@@ -154,33 +181,16 @@ const initScene = () => {
 
   // 添加交互点
   const raycaster = new THREE.Raycaster();
-  const points = [
-    {
-      position: new THREE.Vector3(5.5, -2, -14),
-      element: document.querySelector('.point-0'),
-    },
-    {
-      position: new THREE.Vector3(-1, -2.7, -15),
-      element: document.querySelector('.point-1'),
-    },
-    {
-      position: new THREE.Vector3(-2.8, 4, -15),
-      element: document.querySelector('.point-2'),
-    },
-    {
-      position: new THREE.Vector3(29.4, 7.8, -13),
-      element: document.querySelector('.point-3'),
-    },
-    {
-      position: new THREE.Vector3(24, 0, -10),
-      element: document.querySelector('.point-4'),
-    },
-  ];
+  // 室内悬浮标记物
+  const _points = interactivePoints.value.map((item, index) => ({
+    ...item,
+    element: document.querySelector(`.point-${index}`),
+  }));
 
   // 动画
   const tick = () => {
     if (renderer) {
-      for (const point of points) {
+      for (const point of _points) {
         // 获取2D屏幕位置
         const screenPosition = point.position.clone();
         screenPosition.project(camera);
@@ -218,6 +228,8 @@ const initScene = () => {
 // 点击切换场景
 const handleSwitchButtonClick = async (key) => {
   const room = rooms.filter((item) => item.key === key)[0];
+  /* eslint-disable-next-line */
+  // debugger
   if (data.camera) {
     const x = room.position.x;
     const y = room.position.y;
@@ -232,15 +244,11 @@ const handleSwitchButtonClick = async (key) => {
 
 // 点击交互点
 const handleReactivePointClick = (point) => {
-  Bus.emit('toggleMascot', false);
   Bus.emit('show-card', point);
 };
 
 onMounted(() => {
   initScene();
-  data.keyframeTimeout = setTimeout(() => {
-    data.currentKeyframe = 'float';
-  }, 2400);
 });
 
 onBeforeUnmount(() => {
@@ -267,26 +275,20 @@ onBeforeUnmount(() => {
     animation-fill-mode both
     .button
       display inline-block
-      height 78px
-      width 335px
-      background url('@/assets/images/family/back_button_bg.png') no-repeat center
-      background-size 100% 100%
+      background rgba(0, 0, 0, .3)
+      -webkit-backdrop-filter rgba(0, 200, 50, .5)
+      backdrop-filter blur(4px)
       display flex
       align-items center
-      padding-left 38px
+      justify-content space-around
       overflow hidden
-      .icon
-        display inline-block
-        height 56px
-        width 56px
-        background url('@/assets/images/family/back_button_icon.png') no-repeat center
-        background-size 100% 100%
+      padding 16px 24px
+      border-radius 0 0 24px 0
       .text
         font-size 30px
         color #ffffff
         font-weight 600
         display inline-block
-        padding-left 24px
   .switch
     position fixed
     right 24px
