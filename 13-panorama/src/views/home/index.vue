@@ -71,7 +71,7 @@ const data = reactive({
   camera: null,
   scene: null,
   controls: null,
-  cameraZAxis: 0.01,
+  cameraZAxis: 2,
   currentRoom: 'living-room',
 });
 
@@ -128,10 +128,6 @@ const initScene = () => {
   controls.minPolarAngle = Math.PI / 2;
   controls.maxPolarAngle = Math.PI / 2;
   data.controls = controls;
-
-  // 环境光
-  const light = new THREE.AmbientLight(0xffffff, 2);
-  scene.add(light);
 
   // 页面缩放事件监听
   window.addEventListener('resize', () => {
