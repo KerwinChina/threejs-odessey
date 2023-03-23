@@ -63,7 +63,7 @@ import * as THREE from 'three';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 import { OrbitControls } from '@/utils/OrbitControls.js';
 import Animations from '@/utils/animations';
-import { Bus, sleep } from '@/utils';
+import { Bus, sleep, toast } from '@/utils';
 import { rooms } from '@/views/home/data';
 
 const data = reactive({
@@ -230,20 +230,15 @@ const handleSwitchButtonClick = async (key) => {
   }
   await sleep(1600);
   data.currentRoom = room.key;
-  data.sliders = room.sliders;
 };
 
 // 点击交互点
 const handleReactivePointClick = (point) => {
-  Bus.emit('show-card', point);
+  toast(`您点击了${point.value}`);
 };
 
 onMounted(() => {
   initScene();
-});
-
-onBeforeUnmount(() => {
-  data.keyframeTimeout && clearTimeout(data.keyframeTimeout);
 });
 </script>
 
