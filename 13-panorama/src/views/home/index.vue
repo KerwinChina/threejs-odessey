@@ -1,12 +1,12 @@
 <template>
   <div class="home">
     <canvas class="webgl"></canvas>
-    <div class="back" @click="handleBackClick">
-      <span class="button" title="返回" role="button">
+    <div class="vr">
+      <span class="box">
+        <i class="icon"></i>
         <b class="text">全景漫游</b>
       </span>
     </div>
-    <Card />
     <!-- 场景切换点 -->
     <div class="switch">
       <span class="button" v-for="(room, index) in rooms" :key="index" @click="handleSwitchButtonClick(room.key)" v-show="room.key !== data.currentRoom">
@@ -35,7 +35,7 @@
             ></i>
           </div>
           <div class="info">
-            <p class="p1">{{ point.name }}</p>
+            <p class="p1">{{ point.value }}</p>
             <p class="p2">{{ point.description }}</p>
           </div>
         </label>
@@ -54,8 +54,7 @@ import {
 import { useRouter } from 'vue-router';
 import * as THREE from 'three';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
-import { OrbitControls } from '@/utils/OrbitControls.js';
-import Card from '@/views/home/components/Card.vue';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Animations from '@/utils/animations';
 import { Bus, sleep } from '@/utils';
 import { rooms } from '@/views/home/data';
@@ -78,25 +77,16 @@ const interactivePoints = computed(() => {
   rooms.forEach((room) => {
     if (room.interactivePoints && room.interactivePoints.length > 0) {
       room.interactivePoints.forEach((point) => {
-        if (room.sliders) {
-          const slider = room.sliders.filter((_slider) => _slider.name === point.value)[0];
-          point = {
-            room: room.key,
-            ...point,
-            ...slider,
-          };
-          res.push(point);
-        }
+        point = {
+          room: room.key,
+          ...point,
+        };
+        res.push(point);
       });
     }
   });
   return res;
 });
-
-// 点击返回
-const handleBackClick = () => {
-  router.push({ path: '/home' });
-};
 
 const initScene = () => {
   const sizes = {
@@ -128,6 +118,7 @@ const initScene = () => {
   controls.target.set(0, 0, 0);
   controls.enableDamping = true;
   controls.enablePan = false;
+  controls.rotateSpeed = -0.25;
   // 缩放限制
   controls.maxDistance = 12;
   // 垂直旋转限制
@@ -155,7 +146,7 @@ const initScene = () => {
 
   // 创建空间
   const createRoom = (name, position, map) => {
-    const geometry = new THREE.SphereGeometry(16, 128, 128);
+    const geometry = new THREE.SphereGeometry(16, 256, 256);
     geometry.scale(1, 1, -1);
     const material = new THREE.MeshBasicMaterial({
       map: textLoader.load(map),
@@ -189,7 +180,7 @@ const initScene = () => {
       for (const point of _points) {
         // 获取2D屏幕位置
         const screenPosition = point.position.clone();
-        screenPosition.project(camera);
+        const pos = screenPosition.project(camera);
         raycaster.setFromCamera(screenPosition, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
         if (intersects.length === 0) {
@@ -205,6 +196,9 @@ const initScene = () => {
             ? point.element.classList.remove('visible')
             : point.element.classList.add('visible');
         }
+        pos.z > 1
+          ? point.element.classList.remove('visible')
+          : point.element.classList.add('visible');
         const translateX = screenPosition.x * sizes.width * 0.5;
         const translateY = -screenPosition.y * sizes.height * 0.5;
         point.element.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
@@ -258,7 +252,7 @@ onBeforeUnmount(() => {
     top 0
     left 0
     outline none
-  .back
+  .vr
     position fixed
     top 0
     left 0
@@ -267,26 +261,37 @@ onBeforeUnmount(() => {
     animation slideInLeft 1s .15s
     -webkit-animation-fill-mode both
     animation-fill-mode both
-    .button
+    .box
       display inline-block
       background rgba(0, 0, 0, .3)
-      -webkit-backdrop-filter rgba(0, 200, 50, .5)
-      backdrop-filter blur(4px)
+      -webkit-backdrop-filter rgba(0, 200, 50, .6)
+      backdrop-filter blur(8px)
       display flex
       align-items center
       justify-content space-around
       overflow hidden
-      padding 16px 24px
-      border-radius 0 0 24px 0
-      .text
-        font-size 30px
-        color #ffffff
-        font-weight 600
+      padding 4px 20px
+      border-radius 0 0 16px 0
+      border 1px groove rgba(255, 255, 255, .3)
+      border-top none
+      border-left none
+      box-shadow 0 1px 4px rgba(0, 0, 0, .1)
+      .icon
         display inline-block
+        height 64px
+        width 64px
+        background url('@/assets/images/home/vr.png') no-repeat center
+        background-size contain
+        margin-right 12px
+      .text
+        font-size 24px
+        color #ffffff
+        display inline-block
+        font-weight 500
   .switch
     position fixed
     right 24px
-    top 22%
+    top 40%
     z-index 11
     -webkit-animation slideInRight 1s .3s
     animation slideInRight 1s .3s
@@ -294,7 +299,7 @@ onBeforeUnmount(() => {
     animation-fill-mode both
     .button
       display block
-      background rgba(27, 25, 24, 0.60)
+      background rgba(27, 25, 24, .5)
       border-radius 4px
       display flex
       align-items center
@@ -302,9 +307,11 @@ onBeforeUnmount(() => {
       -webkit-backdrop-filter blur(4px)
       -moz-backdrop-filter blur(4px)
       backdrop-filter blur(4px)
+      cursor pointer
+      transition all .25s ease-in-out
       .text
         color rgba(255, 255, 255, 1)
-        font-size 32px
+        font-size 24px
         font-weight 800
       &:not(last-child)
         margin-bottom 48px
@@ -312,10 +319,13 @@ onBeforeUnmount(() => {
         display inline-block
         height 30px
         width 30px
-        background url('@/assets/images/family/icon_arrow.png') no-repeat center
+        background url('@/assets/images/home/icon_arrow.png') no-repeat center
         background-size 100% 100%
         transform rotate(180deg)
         margin-left 8px
+      &:hover
+        background rgba(27, 25, 24, .2)
+        box-shadow 1px 1px 2px rgba(0, 0, 0, .2)
   .point
     position: fixed;
     top: 50%;
@@ -325,12 +335,11 @@ onBeforeUnmount(() => {
       position: absolute;
       top: -16px;
       left: -16px;
-      width: 28px;
-      height: 28px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, .8);
-      color: #ffffff;
-      font-family: Helvetica, Arial, sans-serif;
+      background: rgba(255, 255, 255, 1);
+      font-home: Helvetica, Arial, sans-serif;
       text-align: center;
       line-height: 32px;
       font-weight: 100;
@@ -338,6 +347,7 @@ onBeforeUnmount(() => {
       cursor: help;
       transform: scale(0, 0);
       transition: transform 0.3s;
+      backdrop-filter blur(4px)
       &::before, &::after
         display inline-block
         content ''
@@ -348,8 +358,8 @@ onBeforeUnmount(() => {
         position absolute
         left 50%
         top 50%
-        margin-left -14px
-        margin-top -14px
+        margin-left -10px
+        margin-top -10px
       &::before
         animation: bounce-wave 1.5s infinite
       &::after
@@ -363,12 +373,11 @@ onBeforeUnmount(() => {
         right -220px
         font-size 32px
         background rgba(255, 255, 255, .6)
-        border-radius 10px
-        border 1px solid rgba(255, 255, 255, .5)
+        border 1px groove rgba(255, 255, 255, .5)
         -webkit-backdrop-filter blur(4px)
         -moz-backdrop-filter blur(4px)
         backdrop-filter blur(4px)
-        text-shadow 1px 1px 1px rgba(0, 0, 0, .15)
+        border-radius 10px
         display flex
         justify-content space-between
         align-content center
@@ -384,6 +393,7 @@ onBeforeUnmount(() => {
           width calc(100% - 80px)
           height 100%
           overflow hidden
+          padding-left 12px
           p
             overflow hidden
             text-overflow ellipsis
@@ -395,13 +405,14 @@ onBeforeUnmount(() => {
               margin 12px 0 2px
             &.p2
               font-size 18px
-              color #0096FD
+              color #03c03c
               font-weight 500
-      &.label-tyyh
+      &.label-sofa
         .label-tips
           left -220px
           flex-direction row-reverse
           .info
+            padding 0 12px 0 0
             p
               text-align right
     .text
@@ -438,11 +449,11 @@ onBeforeUnmount(() => {
 
 @keyframes bounce-wave {
   0% {
-    transform: scale(0.8);
+    transform: scale(1);
     opacity: 1;
   }
   100% {
-    transform: scale(2.2);
+    transform: scale(3.6);
     opacity: 0;
   }
 }

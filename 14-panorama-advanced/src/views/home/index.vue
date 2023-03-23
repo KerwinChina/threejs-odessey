@@ -652,7 +652,7 @@ onBeforeUnmount(() => {
               margin 12px 0 2px
             &.p2
               font-size 18px
-              color #0096FD
+              color #03c03c
               font-weight 500
       &.label-tyyh
         flex-direction row-reverse

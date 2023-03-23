@@ -8,156 +8,27 @@ export const rooms = [
     map: new URL('@/assets/images/map/map_living_room.jpg', import.meta.url).href,
     showSwitch: true,
     position: new Vector3(0, 0, 0),
-    sliders: [
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/living_room_volume.png', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/shilian.png', import.meta.url).href,
-          },
-          {
-            title: 'AI智能',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_2.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/shilian.png', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_3.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_4.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_5.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-    ],
     interactivePoints: [
       {
-        key: 'tyyh',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(0, 0, 0),
+        key: 'tv',
+        value: '电视机',
+        description: '电视机',
+        cover: new URL('@/assets/images/home/cover_living_room_tv.png', import.meta.url).href,
+        position: new Vector3(-6, 2, -8),
       },
       {
-        key: 'tyzp',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(4, 0, -15),
+        key: 'fridge',
+        value: '冰箱',
+        description: '冰箱',
+        cover: new URL('@/assets/images/home/cover_living_room_fridge.png', import.meta.url).href,
+        position: new Vector3(-12, 4, 9),
       },
       {
-        key: 'tykj',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-4, 6, -15),
+        key: 'sofa',
+        value: '沙发',
+        description: '沙发',
+        cover: new URL('@/assets/images/home/cover_living_room_sofa.png', import.meta.url).href,
+        position: new Vector3(6, 0, -8),
       },
     ],
   },
@@ -167,39 +38,13 @@ export const rooms = [
     map: new URL('@/assets/images/map/map_bed_room.jpg', import.meta.url).href,
     showSwitch: true,
     position: new Vector3(-32, 0, 0),
-    sliders: [
+    interactivePoints: [
       {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_bed_room_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_bed_room_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_bed_room_2.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
+        key: 'bed',
+        value: '床',
+        description: '床',
+        cover: new URL('@/assets/images/home/cover_bed_room_bed.png', import.meta.url).href,
+        position: new Vector3(-38, 2, -14),
       },
     ],
   },
@@ -209,42 +54,13 @@ export const rooms = [
     map: new URL('@/assets/images/map/map_study_room.jpg', import.meta.url).href,
     showSwitch: true,
     position: new Vector3(32, 0, 0),
-    sliders: [
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_kitchen_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_kitchen_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-    ],
     interactivePoints: [
       {
-        key: 'fire',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-2, 5, -13),
-      },
-      {
-        key: 'water',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-12, -2, 1),
+        key: 'art',
+        value: '艺术品',
+        description: '艺术品',
+        cover: new URL('@/assets/images/home/cover_study_room_art.png', import.meta.url).href,
+        position: new Vector3(42, 6, -8),
       },
     ]
   },
