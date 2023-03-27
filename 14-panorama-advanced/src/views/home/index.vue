@@ -9,18 +9,8 @@
       </span>
     </div>
 
-    <!-- 页面logo -->
-    <div class="logo">
-      <i class="icon"></i>
-    </div>
-
     <!-- 小地图 -->
     <TinyMap class="tiny-map" :rotate="data.tinyMapRotate" :position="data.tinyMapPosition" />
-
-    <div class="mascot-and-slider" :class="{'is-relative': ['living-room', 'living-room-out', 'kitchen', 'bed-room'].includes(data.currentRoom), 'more-slider': data.sliders && data.sliders.length > 5}">
-      <!-- 底部滑动横幅 -->
-      <Slider v-if="['living-room', 'living-room-out', 'kitchen', 'bed-room'].includes(data.currentRoom)" :sliders="data.sliders" ref="sliderRef" />
-    </div>
 
     <!-- 场景切换点 -->
     <div class="switch">
@@ -91,14 +81,12 @@ import * as THREE from 'three';
 import { OrbitControls } from '@/utils/OrbitControls.js';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 import gsap from 'gsap';
-import Slider from '@/views/home/components/Slider.vue';
 import TinyMap from '@/components/TinyMap.vue';
 import fragment from '@/shaders/cross/fragment.js';
 import vertex from '@/shaders/cross/vertex.js';
 import { Bus, sleep } from '@/utils';
 import Animations from '@/utils/animations';
 import { rooms, markers, roomLabels } from '@/views/home/data';
-import useShowCard from '@/hooks/use-show-card.js';
 
 const router = useRouter();
 const data = reactive({
@@ -111,7 +99,7 @@ const data = reactive({
   // 相机z轴坐标
   cameraZAxis: 2,
   // 当前房屋key值
-  currentRoom: 'hall-0',
+  currentRoom: 'hall',
   // 当前滑动横幅
   sliders: rooms[0].sliders,
   // 用于显示固定侧边栏的房屋
@@ -126,8 +114,7 @@ const data = reactive({
     top: 0
   }
 });
-const {showCard} = useShowCard()
-const sliderRef = ref(null)
+
 data.filtederRooms.forEach((item) => item.visible = true);
 
 // 获取交互点的信息
@@ -496,58 +483,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="stylus" scoped>
-@import url('@/assets/styles/keyframes.styl');
 .family
   .webgl
     position fixed
     top 0
     left 0
     outline none
-  .back
-    position fixed
-    top 0
-    left 0
-    z-index 11
-    -webkit-animation slideInLeft 1s .15s
-    animation slideInLeft 1s .15s
-    -webkit-animation-fill-mode both
-    animation-fill-mode both
-    .button
-      display inline-block
-      height 77px
-      width 272.5px
-      background url('@/assets/images/family/back_button_bg.png') no-repeat center
-      background-size 100% 100%
-      display flex
-      align-items center
-      padding-left 38px
-      overflow hidden
-      cursor pointer
-      transition filter .25s ease-out
-      .icon
-        display inline-block
-        height 56px
-        width 56px
-        background url('@/assets/images/family/back_button_icon.png') no-repeat center
-        background-size 100% 100%
-      .text
-        font-size 30px
-        color #ffffff
-        font-weight 600
-        display inline-block
-        padding-left 24px
-      &:hover
-        filter brightness(1.2)
-  .logo
-    position fixed
-    right 24px
-    top 24px
-    .icon
-      display inline-block
-      height 56px
-      width 256px
-      background url('@/assets/images/common/logo.png') no-repeat center
-      background-size 100% 100%
+
   .tiny-map
     top 110px
     right 24px
@@ -582,7 +524,7 @@ onBeforeUnmount(() => {
         display inline-block
         height 30px
         width 30px
-        background url('@/assets/images/family/icon_arrow.png') no-repeat center
+        background url('@/assets/images/home/icon_arrow.png') no-repeat center
         background-size 100% 100%
         transform rotate(180deg)
         margin-left 8px
