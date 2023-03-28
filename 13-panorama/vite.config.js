@@ -15,7 +15,7 @@ export default defineConfig({
   },
   build:
   {
-    outDir: './dist',
+    outDir: './docs',
     emptyOutDir: true,
     sourcemap: false,
     assetsInlineLimit: 0,
@@ -28,9 +28,9 @@ export default defineConfig({
             switch (arr[0]) {
               case '@vue':
               case 'three':
-                return `_${arr[0]}`;
+                return `${arr[0]}`;
               default:
-                return '__vendor';
+                return 'vendor';
             }
           }
           return true;
@@ -38,7 +38,7 @@ export default defineConfig({
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/') : [];
           const fileName = facadeModuleId[facadeModuleId.length - 2] || '[name]';
-          return `js/${fileName}/[name].[hash].js`;
+          return `assets/${fileName}/[name].[hash].js`;
         },
       },
     },
