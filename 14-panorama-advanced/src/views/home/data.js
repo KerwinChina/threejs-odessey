@@ -8,151 +8,19 @@ export const rooms = [
     map: new URL('@/assets/images/map/map_hall.jpg', import.meta.url).href,
     showSwitch: false,
     tinyMapPosition: {
-      top: 148,
+      top: 30,
       left: 75
     },
   },
   {
-    name: '客厅',
+    name: '客厅过道',
     key: 'living-room-out',
     map: new URL('@/assets/images/map/map_living_room_out.jpg', import.meta.url).href,
-    showSwitch: true,
+    showSwitch: false,
     tinyMapPosition: {
-      top: 85,
+      top: 80,
       left: 50
     },
-    sliders: [
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/living_room_volume.png', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/shilian.png', import.meta.url).href,
-          },
-          {
-            title: 'AI智能',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_2.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/shilian.png', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_3.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_4.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_5.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-    ],
     interactivePoints: [
       {
         key: 'tyyh',
@@ -178,146 +46,14 @@ export const rooms = [
     ],
   },
   {
-    name: '客厅内部',
+    name: '客厅',
     key: 'living-room',
     map: new URL('@/assets/images/map/map_living_room.jpg', import.meta.url).href,
-    showSwitch: false,
+    showSwitch: true,
     tinyMapPosition: {
-      top: 70,
+      top: 100,
       left: 50
     },
-    sliders: [
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/living_room_volume.png', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/shilian.png', import.meta.url).href,
-          },
-          {
-            title: 'AI智能',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_2.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-            image: new URL('@/assets/images/family/shilian.png', import.meta.url).href,
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-          {
-            title: 'xxx',
-            description: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_3.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_4.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_living_room_5.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-    ],
     interactivePoints: [
       {
         key: 'tyyh',
@@ -348,44 +84,9 @@ export const rooms = [
     map: new URL('@/assets/images/map/map_bed_room.jpg', import.meta.url).href,
     showSwitch: true,
     tinyMapPosition: {
-      top: 20,
-      left: 50
+      top: 30,
+      left: 110
     },
-    sliders: [
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_bed_room_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: 'xxx',
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_bed_room_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_bed_room_2.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-    ],
   },
   {
     name: '厨房',
@@ -393,33 +94,9 @@ export const rooms = [
     map: new URL('@/assets/images/map/map_kitchen.jpg', import.meta.url).href,
     showSwitch: true,
     tinyMapPosition: {
-      top: 145,
-      left: 50
+      top: 75,
+      left: 110
     },
-    sliders: [
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_kitchen_0.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-      {
-        name: 'xxx',
-        cover: new URL('@/assets/images/family/cover_kitchen_1.png', import.meta.url).href,
-        details: [
-          {
-            title: 'xxx',
-            description: 'xxx',
-            video: new URL('@/assets/videos/szjt.mp4', import.meta.url).href,
-          },
-        ],
-      },
-    ],
     interactivePoints: [
       {
         key: 'fire',
@@ -437,6 +114,16 @@ export const rooms = [
       },
     ]
   },
+  {
+    name: '卫生间',
+    key: 'bath-room',
+    map: new URL('@/assets/images/map/map_bath_room.jpg', import.meta.url).href,
+    showSwitch: true,
+    tinyMapPosition: {
+      top: 20,
+      left: 50
+    },
+  },
 ];
 
 const maps = rooms.map((item) => {
@@ -452,48 +139,56 @@ const getMap = (key) => {
 
 export const markers = [
   // ------------------------------------------------------------------------
-  // 走廊0
+  // 走廊
   // ------------------------------------------------------------------------
-  // 向走廊1
+  // 向卫生间
   {
     currentRoom: 'hall',
-    destinationRoom: 'living-room',
+    destinationRoom: 'bath-room',
     origin: getMap('hall'),
-    destination: getMap('living-room'),
-    position: new Vector3(-2.5, -2, -15)
+    destination: getMap('bath-room'),
+    position: new Vector3(-13, -2, -10)
+  },
+  // 向卧室
+  {
+    currentRoom: 'hall',
+    destinationRoom: 'bed-room',
+    origin: getMap('hall'),
+    destination: getMap('bed-room'),
+    position: new Vector3(13, 0, 6)
+  },
+  // 向客厅
+  {
+    currentRoom: 'hall',
+    destinationRoom: 'living-room-out',
+    origin: getMap('hall'),
+    destination: getMap('living-room-out'),
+    position: new Vector3(-12, -4, 15)
+  },
+  // ------------------------------------------------------------------------
+  // 卫生间
+  // ------------------------------------------------------------------------
+  // 向走廊
+  {
+    currentRoom: 'bath-room',
+    destinationRoom: 'hall',
+    origin: getMap('bath-room'),
+    destination: getMap('hall'),
+    position: new Vector3(13, 0, -4)
   },
   // ------------------------------------------------------------------------
   // 卧室
   // ------------------------------------------------------------------------
-  // 向走廊5
+  // 向走廊
   {
     currentRoom: 'bed-room',
     destinationRoom: 'hall',
     origin: getMap('bed-room'),
     destination: getMap('hall'),
-    position: new Vector3(15, -2.5, 8.5),
-  },
-  // 厨房
-  {
-    currentRoom: 'kitchen',
-    destinationRoom: 'hall',
-    origin: getMap('kitchen'),
-    destination: getMap('hall'),
-    position: new Vector3(15, -1, -4),
+    position: new Vector3(-15, 1, 4),
   },
   // ------------------------------------------------------------------------
-  // 客厅
-  // ------------------------------------------------------------------------
-  // 向走廊3
-  {
-    currentRoom: 'living-room',
-    destinationRoom: 'hall',
-    origin: getMap('living-room'),
-    destination: getMap('hall'),
-    position: new Vector3(15, -1, 7),
-  },
-  // ------------------------------------------------------------------------
-  // 客厅过道
+  // 客厅外
   // ------------------------------------------------------------------------
   // 向客厅
   {
@@ -501,14 +196,61 @@ export const markers = [
     destinationRoom: 'living-room',
     origin: getMap('living-room-out'),
     destination: getMap('living-room'),
-    position: new Vector3(0, 0, -15),
+    position: new Vector3(-4, -4, 15),
   },
+  // 向走廊
   {
     currentRoom: 'living-room-out',
     destinationRoom: 'hall',
     origin: getMap('living-room-out'),
     destination: getMap('hall'),
-    position: new Vector3(14, -1, 0),
+    position: new Vector3(15, -5, -5),
+  },
+  // 向厨房
+  {
+    currentRoom: 'living-room-out',
+    destinationRoom: 'kitchen',
+    origin: getMap('living-room-out'),
+    destination: getMap('kitchen'),
+    position: new Vector3(15, -3, 5),
+  },
+  // ------------------------------------------------------------------------
+  // 客厅
+  // ------------------------------------------------------------------------
+  // 向走廊
+  {
+    currentRoom: 'living-room',
+    destinationRoom: 'hall',
+    origin: getMap('living-room'),
+    destination: getMap('hall'),
+    position: new Vector3(15, -3, -12),
+  },
+  // 向客厅外
+  {
+    currentRoom: 'living-room',
+    destinationRoom: 'living-room-out',
+    origin: getMap('living-room'),
+    destination: getMap('living-room-out'),
+    position: new Vector3(13, -6, -14),
+  },
+  // 向厨房
+  {
+    currentRoom: 'living-room',
+    destinationRoom: 'kitchen',
+    origin: getMap('living-room'),
+    destination: getMap('kitchen'),
+    position: new Vector3(15, -2, -1),
+  },
+  // ------------------------------------------------------------------------
+  // 厨房
+  // ------------------------------------------------------------------------
+  // 向客厅
+  {
+    currentRoom: 'kitchen',
+    destinationRoom: 'living-room',
+    origin: getMap('kitchen'),
+    destination: getMap('living-room'),
+    position: new Vector3(-12, -3.5, -15),
   },
 ];
 

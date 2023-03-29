@@ -1,10 +1,11 @@
 <template>
-  <div class="family">
-    <canvas class="webgl-family"></canvas>
+  <div class="home">
+    <canvas class="webgl"></canvas>
 
-    <!-- 返回按钮 -->
-    <div class="back" @click="handleBackClick">
-      <span class="button" title="返回" role="button">
+    <!-- logo -->
+    <div class="vr">
+      <span class="box">
+        <i class="icon"></i>
         <b class="text">全景漫游</b>
       </span>
     </div>
@@ -70,6 +71,13 @@
         {{ label.name }}
       </div>
     </div>
+
+    <a class='github' href='https://github.com/dragonir/threejs-odessey' target='_blank' rel='noreferrer'>
+      <svg height='40' aria-hidden='true' viewBox='0 0 16 16' version='1.1' width='40' data-view-component='true'>
+        <path fill='#ffffff' fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+      </svg>
+      <span class='author'>three.js odessey</span>
+    </a>
   </div>
 </template>
 
@@ -99,13 +107,12 @@ const data = reactive({
   // 相机z轴坐标
   cameraZAxis: 2,
   // 当前房屋key值
-  currentRoom: 'hall',
+  currentRoom: 'living-room',
   // 当前滑动横幅
   sliders: rooms[0].sliders,
   // 用于显示固定侧边栏的房屋
   filtederRooms: rooms.filter((item) => item.showSwitch === true),
   // 当前吉祥物动画帧类型
-  currentKeyframe: 'hi',
   keyframeTimeout: null,
   showMascot: false,
   rotate: 0,
@@ -123,15 +130,12 @@ const interactivePoints = computed(() => {
   rooms.forEach((room) => {
     if (room.interactivePoints && room.interactivePoints.length > 0) {
       room.interactivePoints.forEach((point) => {
-        if (room.sliders) {
-          const slider = room.sliders.filter((slider) => slider.name === point.value)[0];
-          point = {
-            ...point,
-            ...slider
-          }
-          res.push(point);
-        }
-      })
+        point = {
+          room: room.key,
+          ...point,
+        };
+        res.push(point);
+      });
     }
   });
   return res;
@@ -158,14 +162,14 @@ const initScene = () => {
   const sceneFinal = new THREE.Scene();
 
   // 初始化渲染器
-  const canvas = document.querySelector("canvas.webgl-family");
+  const canvas = document.querySelector("canvas.webgl");
   const renderer = new THREE.WebGLRenderer({ canvas });
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   data.renderer = renderer;
 
   const camera = new THREE.PerspectiveCamera(
-    70,
+    55,
     window.innerWidth / window.innerHeight,
     0.001,
     1000
@@ -468,12 +472,6 @@ const handleReactivePointClick = (point) => {
 onMounted(() => {
   initScene();
   Animations.animateCamera(data.camera, data.controls, { x: 0, y: 0, z: data.cameraZAxis }, { x: 0, y: 0, z: 0 }, 1600, () => {});
-  data.keyframeTimeout = setTimeout(() => {
-    data.currentKeyframe = "float";
-  }, 2400);
-  Bus.on("toggleMascot", (bool) => {
-    data.showMascot = bool;
-  });
 });
 
 onBeforeUnmount(() => {
@@ -483,15 +481,52 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="stylus" scoped>
-.family
+.home
   .webgl
     position fixed
     top 0
     left 0
     outline none
 
+  .vr
+    position fixed
+    top 0
+    left 0
+    z-index 11
+    -webkit-animation slideInLeft 1s .15s
+    animation slideInLeft 1s .15s
+    -webkit-animation-fill-mode both
+    animation-fill-mode both
+    .box
+      display inline-block
+      background rgba(0, 0, 0, .3)
+      -webkit-backdrop-filter blur(8px)
+      backdrop-filter blur(8px)
+      display flex
+      align-items center
+      justify-content space-around
+      overflow hidden
+      padding 4px 20px
+      border-radius 0 0 16px 0
+      border 1px groove rgba(255, 255, 255, .3)
+      border-top none
+      border-left none
+      box-shadow 0 1px 4px rgba(0, 0, 0, .1)
+      .icon
+        display inline-block
+        height 64px
+        width 64px
+        background url('@/assets/images/home/vr.png') no-repeat center
+        background-size contain
+        margin-right 12px
+      .text
+        font-size 24px
+        color #ffffff
+        display inline-block
+        font-weight 500
+
   .tiny-map
-    top 110px
+    top 24px
     right 24px
   .switch
     position fixed
@@ -653,7 +688,7 @@ onBeforeUnmount(() => {
         content ''
         height 40px
         width 40px
-        background url('@/assets/images/family/icon_arrow.png') no-repeat center
+        background url('@/assets/images/home/icon_arrow.png') no-repeat center
         background-size 100% 100%
         position absolute
         left -48px
@@ -663,6 +698,30 @@ onBeforeUnmount(() => {
     &.visible
       .room-label-box
         transform: scale(1, 1);
+
+.github {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  font-size: 18PX;
+  color: rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  transition: all .25s ease-in-out;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+  opacity: .8;
+}
+
+.github:hover {
+  opacity: .5;
+}
+
+.github .author {
+  padding-left: 8px;
+}
 
 .animate-point-wave::before {
   content: '';
@@ -689,32 +748,25 @@ onBeforeUnmount(() => {
   top: 50%;
   left: 50%;
   z-index 12
-  height 120px
-  width 120px
   display none
   &::after
     display inline-block
     content ''
-    height 200px
-    width 240px
-    background-image url('@/assets/images/sprites/marker.png')
-    background-repeat: no-repeat
-    background-position: 0 0
-    background-size: 100%
-    background-position-y: 0
-    -webkit-animation: markerAnimation 4s steps(24) forwards infinite;
-    animation: markerAnimation 2.4s steps(24) forwards infinite
-    -webkit-animation-fill-mode both;
-    animation-fill-mode both;
+    height 80px
+    width 80px
+    background url('@/assets/images/common/arrow.gif') no-repeat center
+    background-size contain
     cursor pointer
-    transform: scale(0, 0);
+    transform rotate(-90deg) scale(0, 0)
+    opacity .6
   &:hover
     &::after
       filter brightness(1.2)
+      opacity 1
   &.visible
     display block
     &::after
-      transform: scale(.8, .8);
+      transform rotate(-90deg) scale(.8, .8)
 
 @keyframes markerBounce {
   0% {
@@ -743,23 +795,6 @@ onBeforeUnmount(() => {
   }
 }
 
-@-webkit-keyframes markerAnimation {
-  0% {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 0 -4800px;
-  }
-}
-@keyframes markerAnimation {
-  0% {
-    background-position: 0 0
-  }
-  to {
-    background-position: 0 -4800px;
-  }
-}
-
 @-webkit-keyframes interactivePointAnimation {
   0% {
     background-position: 0 0;
@@ -776,29 +811,4 @@ onBeforeUnmount(() => {
     background-position: 0 -1536PX;
   }
 }
-
-.mascot-and-slider
-  &.is-relative
-    position absolute
-    display flex
-    bottom 0
-    align-items flex-end
-    width 100%
-    :deep(.mascot)
-      position absolute
-      left 0 !important
-      bottom 0 !important
-      transform translateY(25%)
-    :deep(.slider)
-      position relative
-      left 0 !important
-      bottom 0 !important
-      margin-left 20px !important
-      width auto !important
-      flex 1
-      display flex
-      justify-content center
-  &.more-slider
-    :deep(.slider)
-      margin-left 316px !important
 </style>
