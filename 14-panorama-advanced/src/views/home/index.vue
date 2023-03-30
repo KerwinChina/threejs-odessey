@@ -48,7 +48,7 @@
             ></i>
           </div>
           <div class="info">
-            <p class="p1">{{ point.name }}</p>
+            <p class="p1">{{ point.value }}</p>
             <p class="p2">{{ point.description }}</p>
           </div>
         </label>
@@ -74,7 +74,7 @@
 
     <a class='github' href='https://github.com/dragonir/threejs-odessey' target='_blank' rel='noreferrer'>
       <svg height='40' aria-hidden='true' viewBox='0 0 16 16' version='1.1' width='40' data-view-component='true'>
-        <path fill='#ffffff' fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        <path fill='#000000' fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
       </svg>
       <span class='author'>three.js odessey</span>
     </a>
@@ -174,7 +174,7 @@ const initScene = () => {
     0.001,
     1000
   );
-  camera.position.set(0, 8, 16);
+  camera.position.set(0, 16, 16);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
   data.camera = camera;
 
@@ -531,7 +531,7 @@ onBeforeUnmount(() => {
   .switch
     position fixed
     right 24px
-    top calc(180PX + 200px)
+    top calc(180PX + 18%)
     z-index 11
     -webkit-animation slideInRight 1s .3s
     animation slideInRight 1s .3s
@@ -539,22 +539,24 @@ onBeforeUnmount(() => {
     animation-fill-mode both
     .button
       display block
-      background rgba(27, 25, 24, .6)
-      border-radius 4px
+      background rgba(0, 0, 0, .25)
+      border-radius 8px
       display flex
       align-items center
-      padding 8px 8px 8px 24px
+      padding 8px 0 8px 24px
       -webkit-backdrop-filter blur(4px)
       -moz-backdrop-filter blur(4px)
       backdrop-filter blur(4px)
       cursor pointer
       transition all .25s ease-out
+      border 1px groove rgba(255, 255, 255, .1)
+      box-shadow 1px 1px 1px rgba(0, 0, 0, .1)
       .text
         color rgba(255, 255, 255, 1)
-        font-size 28px
-        font-weight 800
+        font-size 24px
+        font-weight normal
       &:not(last-child)
-        margin-bottom 32px
+        margin-bottom 24px
       .icon
         display inline-block
         height 30px
@@ -597,7 +599,7 @@ onBeforeUnmount(() => {
         width 200px
         overflow hidden
         font-size 32px
-        background rgba(255, 255, 255, .6)
+        background rgba(255, 255, 255, .5)
         border-radius 10px
         border 1px solid rgba(255, 255, 255, .5)
         -webkit-backdrop-filter blur(4px)
@@ -629,9 +631,9 @@ onBeforeUnmount(() => {
               margin 12px 0 2px
             &.p2
               font-size 18px
-              color #03c03c
+              color #00452d
               font-weight 500
-      &.label-tyyh
+      &.label-tv
         flex-direction row-reverse
         .label-tips
           left -200px
@@ -668,12 +670,11 @@ onBeforeUnmount(() => {
     left: 50%;
     z-index 10
     &-box
-      background rgba(0, 0, 0, .4)
+      background rgba(0, 0, 0, .2)
       color rgba(255, 255, 255, 1)
-      font-size 28px
-      font-weight 600
+      font-size 24px
       padding 12px 24px
-      border-radius 4px
+      border-radius 8px
       display flex
       align-items center
       justify-content space-around
@@ -694,7 +695,6 @@ onBeforeUnmount(() => {
         left -48px
         transform rotate(360deg)
         animation arrowLeft 2.8s ease-in-out infinite
-
     &.visible
       .room-label-box
         transform: scale(1, 1);
@@ -705,7 +705,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   z-index: 1;
   font-size: 18PX;
-  color: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, 1);
   display: flex;
   align-items: center;
   padding: 16px;
@@ -742,7 +742,6 @@ onBeforeUnmount(() => {
     opacity: 0;
   }
 }
-
 .marker
   position: fixed;
   top: 50%;
@@ -752,21 +751,45 @@ onBeforeUnmount(() => {
   &::after
     display inline-block
     content ''
-    height 80px
-    width 80px
-    background url('@/assets/images/common/arrow.gif') no-repeat center
-    background-size contain
+    height 64px
+    width 64px
+    background-image url('@/assets/images/sprites/marker.png')
+    background-repeat: no-repeat
+    background-position: 0 0
+    background-size: 100%
+    background-position-y: 0
+    -webkit-animation: markerAnimation 3s steps(20) forwards infinite;
+    animation: markerAnimation 3s steps(20) forwards infinite
+    -webkit-animation-fill-mode both;
+    animation-fill-mode both;
     cursor pointer
-    transform rotate(-90deg) scale(0, 0)
+    transform: scale(0, 0);
     opacity .6
   &:hover
     &::after
       filter brightness(1.2)
-      opacity 1
   &.visible
     display block
     &::after
-      transform rotate(-90deg) scale(.8, .8)
+      transform: scale(.8, .8);
+
+
+@-webkit-keyframes markerAnimation {
+  0% {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -1280px;
+  }
+}
+@keyframes markerAnimation {
+  0% {
+    background-position: 0 0
+  }
+  to {
+    background-position: 0 -1280px;
+  }
+}
 
 @keyframes markerBounce {
   0% {

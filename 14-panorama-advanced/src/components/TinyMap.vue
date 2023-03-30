@@ -28,11 +28,14 @@ const props = defineProps({
 <style lang="stylus" scoped>
 .tiny-map
   position fixed
-  background-image linear-gradient(270deg, rgba(4,12,51,0.70) 0%, rgba(3,11,51,0.20) 100%)
-  border-radius 10px
+  background rgba(0, 0, 0, .3)
+  border-radius 8px
+  border 1px groove rgba(255, 255, 255, .1)
   -webkit-backdrop-filter blur(4px)
   backdrop-filter blur(4px)
   z-index 11
+  overflow hidden
+  box-shadow 1px 1px 1px rgba(0, 0, 0, .1)
   .map
     height 220PX
     width 180PX

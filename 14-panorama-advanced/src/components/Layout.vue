@@ -49,13 +49,11 @@ onMounted(() => {
   top 0
   z-index 111
   background: #c4eeb2
-  background-image radial-gradient(at 43.0% 19.0%, #567dbf 0px, transparent 50%),radial-gradient(at 82.0% 18.0%, #00c0f5 0px, transparent 50%),radial-gradient(at 77.0% 15.0%, hsl(230, 50%, 46%) 0px, transparent 50%),radial-gradient(at 30.0% 73.0%, hsl(111, 65%, 57%) 0px, transparent 50%),radial-gradient(at 6.0% 3.0%, #ede34e 0px, transparent 50%)
-  text-align center
+  background: #03f692; background-image: radial-gradient(at 73.0% 34.0%, hsl(212, 99%, 60%) 0px, transparent 50%),radial-gradient(at 42.0% 4.0%, #f2f20a 0px, transparent 50%),radial-gradient(at 70.0% 98.0%, hsl(134, 61%, 45%) 0px, transparent 50%),radial-gradient(at 30.0% 9.0%, hsl(79, 32%, 37%) 0px, transparent 50%),radial-gradient(at 3.0% 39.0%, #2ce61c 0px, transparent 50%)
   overflow hidden
   display flex
   align-items center
   justify-content space-around
-  display none
   .progress
     display inline-block
     font-size 64px

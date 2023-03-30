@@ -3,16 +3,6 @@ import { Vector3, TextureLoader } from 'three';
 
 export const rooms = [
   {
-    name: '走廊',
-    key: 'hall',
-    map: new URL('@/assets/images/map/map_hall.jpg', import.meta.url).href,
-    showSwitch: false,
-    tinyMapPosition: {
-      top: 30,
-      left: 75
-    },
-  },
-  {
     name: '客厅过道',
     key: 'living-room-out',
     map: new URL('@/assets/images/map/map_living_room_out.jpg', import.meta.url).href,
@@ -21,29 +11,6 @@ export const rooms = [
       top: 80,
       left: 50
     },
-    interactivePoints: [
-      {
-        key: 'tyyh',
-        room: 'living-room-out',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-7, 0, -15),
-      },
-      {
-        key: 'tyzp',
-        room: 'living-room-out',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(4, 0, -15),
-      },
-      {
-        key: 'tykj',
-        room: 'living-room-out',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-4, 6, -15),
-      },
-    ],
   },
   {
     name: '客厅',
@@ -56,25 +23,32 @@ export const rooms = [
     },
     interactivePoints: [
       {
-        key: 'tyyh',
-        room: 'living-room',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-7, -2, -15),
+        key: 'tv',
+        value: '电视',
+        description: '智能电视',
+        cover: new URL('@/assets/images/home/cover_living_room_tv.png', import.meta.url).href,
+        position: new Vector3(-8, 2, -15),
       },
       {
-        key: 'tyzp',
-        room: 'living-room',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(9, -2, -15),
+        key: 'art',
+        value: '艺术品',
+        description: 'BE@RBRICK',
+        cover: new URL('@/assets/images/home/cover_living_room_art.png', import.meta.url).href,
+        position: new Vector3(10.5, 0, -15),
       },
       {
-        key: 'tykj',
-        room: 'living-room',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-6, 9, -15),
+        key: 'plant',
+        value: '绿植',
+        description: '自由呼吸',
+        cover: new URL('@/assets/images/home/cover_living_room_plant.png', import.meta.url).href,
+        position: new Vector3(-15, 5, -15),
+      },
+      {
+        key: 'sofa',
+        value: '沙发',
+        description: '现在家居',
+        cover: new URL('@/assets/images/home/cover_living_room_sofa.png', import.meta.url).href,
+        position: new Vector3(-10, -4, 15),
       },
     ],
   },
@@ -87,6 +61,15 @@ export const rooms = [
       top: 30,
       left: 110
     },
+    interactivePoints: [
+      {
+        key: 'bed',
+        value: '床',
+        description: '温暖的床',
+        cover: new URL('@/assets/images/home/cover_bed_room_bed.png', import.meta.url).href,
+        position: new Vector3(-5, -2, -15),
+      },
+    ],
   },
   {
     name: '厨房',
@@ -99,18 +82,18 @@ export const rooms = [
     },
     interactivePoints: [
       {
-        key: 'fire',
-        room: 'kitchen',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-2, 5, -13),
+        key: 'fridge',
+        value: '冰箱',
+        description: '智能家电',
+        cover: new URL('@/assets/images/home/cover_kitchen_fridge.png', import.meta.url).href,
+        position: new Vector3(15, 4, 5),
       },
       {
-        key: 'water',
-        room: 'kitchen',
-        value: 'xxx',
-        description: 'xxx',
-        position: new Vector3(-12, -2, 1),
+        key: 'fruit',
+        value: '水果',
+        description: '美味食物',
+        cover: new URL('@/assets/images/home/cover_kitchen_fruit.png', import.meta.url).href,
+        position: new Vector3(2, -2, -15),
       },
     ]
   },
@@ -122,6 +105,16 @@ export const rooms = [
     tinyMapPosition: {
       top: 20,
       left: 50
+    },
+  },
+  {
+    name: '走廊',
+    key: 'hall',
+    map: new URL('@/assets/images/map/map_hall.jpg', import.meta.url).href,
+    showSwitch: true,
+    tinyMapPosition: {
+      top: 30,
+      left: 75
     },
   },
 ];
@@ -239,7 +232,7 @@ export const markers = [
     destinationRoom: 'kitchen',
     origin: getMap('living-room'),
     destination: getMap('kitchen'),
-    position: new Vector3(15, -2, -1),
+    position: new Vector3(13, -3, 0),
   },
   // ------------------------------------------------------------------------
   // 厨房
@@ -261,33 +254,13 @@ export const roomLabels = [
     visible: true,
     visibleRooms: [
       {
-        key: 'hall-2',
-        position: new Vector3(-11, 1, 3),
-      },
-      {
-        key: 'hall-3',
-        position: new Vector3(-16, 5, 14),
-      },
-      {
-        key: 'hall-4',
-        position: new Vector3(-8, 3, 16),
-      },
-      {
-        key: 'hall-5',
-        position: new Vector3(-6, 2, 16),
-      },
-      {
-        key: 'canting',
-        position: new Vector3(-1, 2, 16),
-      },
-      {
         key: 'living-room',
-        position: new Vector3(0, 2, 16),
+        position: new Vector3(13, 2, 0),
       },
       {
         key: 'living-room-out',
-        position: new Vector3(0, 3, 16),
-      }
+        position: new Vector3(15, 2, 4),
+      },
     ],
   },
   {
@@ -296,41 +269,17 @@ export const roomLabels = [
     visible: true,
     visibleRooms: [
       {
-        key: 'hall-0',
-        position: new Vector3(0, 2, -16),
-      },
-      {
-        key: 'hall-1',
-        position: new Vector3(0, 2.2, -16),
-      },
-      {
-        key: 'hall-2',
-        position: new Vector3(-1.2, 2.5, -16),
-      },
-      {
-        key: 'hall-3',
-        position: new Vector3(-1.5, 2.5, -16),
-      },
-      {
-        key: 'hall-4',
-        position: new Vector3(-3, 8, -16),
-      },
-      {
-        key: 'hall-5',
-        position: new Vector3(-8, 3, -6),
-      },
-      {
-        key: 'canting',
-        position: new Vector3(6, 2, -16),
+        key: 'hall',
+        position: new Vector3(13, 4, 6),
       },
       {
         key: 'living-room',
-        position: new Vector3(16, 6, -11),
+        position: new Vector3(15, 3, -12),
       },
       {
         key: 'living-room-out',
-        position: new Vector3(8, 3, -12),
-      }
+        position: new Vector3(15, 3, -5),
+      },
     ],
-  }
+  },
 ];
