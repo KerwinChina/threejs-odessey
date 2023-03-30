@@ -148,7 +148,7 @@ export const markers = [
     destinationRoom: 'bed-room',
     origin: getMap('hall'),
     destination: getMap('bed-room'),
-    position: new Vector3(13, 0, 6)
+    position: new Vector3(13, -2, 6)
   },
   // 向客厅
   {
@@ -156,7 +156,7 @@ export const markers = [
     destinationRoom: 'living-room-out',
     origin: getMap('hall'),
     destination: getMap('living-room-out'),
-    position: new Vector3(-12, -4, 15)
+    position: new Vector3(-12, -6, 15)
   },
   // ------------------------------------------------------------------------
   // 卫生间
@@ -167,7 +167,7 @@ export const markers = [
     destinationRoom: 'hall',
     origin: getMap('bath-room'),
     destination: getMap('hall'),
-    position: new Vector3(13, 0, -4)
+    position: new Vector3(13, -2, -4)
   },
   // ------------------------------------------------------------------------
   // 卧室
@@ -178,7 +178,7 @@ export const markers = [
     destinationRoom: 'hall',
     origin: getMap('bed-room'),
     destination: getMap('hall'),
-    position: new Vector3(-15, 1, 4),
+    position: new Vector3(-15, -5, 3),
   },
   // ------------------------------------------------------------------------
   // 客厅外
@@ -264,6 +264,17 @@ export const roomLabels = [
     ],
   },
   {
+    key: 'bath-room',
+    name: '卫生间',
+    visible: true,
+    visibleRooms: [
+      {
+        key: 'hall',
+        position: new Vector3(-13, 4, -10),
+      },
+    ],
+  },
+  {
     key: 'bed-room',
     name: '卧室',
     visible: true,
@@ -272,6 +283,32 @@ export const roomLabels = [
         key: 'hall',
         position: new Vector3(13, 4, 6),
       },
+    ],
+  },
+  {
+    key: 'living-room',
+    name: '客厅',
+    visible: true,
+    visibleRooms: [
+      {
+        key: 'hall',
+        position: new Vector3(-12, 2, 15),
+      },
+      {
+        key: 'kitchen',
+        position: new Vector3(-12, 2, -15),
+      }
+    ],
+  },
+  {
+    key: 'hall',
+    name: '走廊',
+    visible: true,
+    visibleRooms: [
+      {
+        key: 'bed-room',
+        position: new Vector3(-15, 3, 3),
+      },
       {
         key: 'living-room',
         position: new Vector3(15, 3, -12),
@@ -279,6 +316,10 @@ export const roomLabels = [
       {
         key: 'living-room-out',
         position: new Vector3(15, 3, -5),
+      },
+      {
+        key: 'bath-room',
+        position: new Vector3(13, 4, -4),
       },
     ],
   },

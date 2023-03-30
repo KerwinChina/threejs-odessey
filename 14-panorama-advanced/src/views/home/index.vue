@@ -86,15 +86,15 @@
 import { computed, onMounted, reactive, onBeforeUnmount, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as THREE from 'three';
+import { Bus, sleep, toast } from '@/utils';
+import { rooms, markers, roomLabels } from '@/views/home/data';
 import { OrbitControls } from '@/utils/OrbitControls.js';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 import gsap from 'gsap';
-import TinyMap from '@/components/TinyMap.vue';
 import fragment from '@/shaders/cross/fragment.js';
 import vertex from '@/shaders/cross/vertex.js';
-import { Bus, sleep } from '@/utils';
 import Animations from '@/utils/animations';
-import { rooms, markers, roomLabels } from '@/views/home/data';
+import TinyMap from '@/components/TinyMap.vue';
 
 const router = useRouter();
 const data = reactive({
@@ -112,17 +112,12 @@ const data = reactive({
   sliders: rooms[0].sliders,
   // 用于显示固定侧边栏的房屋
   filtederRooms: rooms.filter((item) => item.showSwitch === true),
-  // 当前吉祥物动画帧类型
-  keyframeTimeout: null,
-  showMascot: false,
   rotate: 0,
   tinyMapPosition: {
     left: 0,
     top: 0
   }
 });
-
-data.filtederRooms.forEach((item) => item.visible = true);
 
 // 获取交互点的信息
 const interactivePoints = computed(() => {
@@ -140,11 +135,6 @@ const interactivePoints = computed(() => {
   });
   return res;
 });
-
-// 点击返回
-const handleBackClick = () => {
-  router.push({ path: "/home" });
-};
 
 // 默认初始贴图和目标贴图
 const mapOrigin = markers.filter((item) => item.currentRoom === data.currentRoom)[0].origin;
@@ -359,6 +349,7 @@ const initScene = () => {
       }
     }
     // 房屋名称标记物显隐
+    data.filtederRooms.forEach((item) => item.visible = true);
     if (_roomLabels) {
       for (const label of _roomLabels) {
         const currentRoomInfo = label.visibleRooms.filter((item) => item.key === data.currentRoom)[0];
@@ -428,7 +419,7 @@ const initScene = () => {
   tick();
 };
 
-// 点击切换点
+// 点击侧边固定切换点
 const handleSwitchButtonClick = async (key) => {
   const originRoom = markers.filter((item) => item.currentRoom === data.currentRoom)[0];
   const destinationRoom = markers.filter((item) => item.currentRoom === key)[0];
@@ -459,14 +450,9 @@ const handleRouteButtonClick = async (marker) => {
   }
 };
 
-// 点击交互点
+// 点击空间交互点
 const handleReactivePointClick = (point) => {
-  Bus.emit("toggleMascot", false);
-  sliderRef.value && (sliderRef.value.sliderShow(false));
-  showCard(point).then(() => {
-    Bus.emit("toggleMascot", true);
-    sliderRef.value && (sliderRef.value.sliderShow(true));
-  })
+  toast(`您点击了${point.value}`);
 };
 
 onMounted(() => {
@@ -476,7 +462,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   data.keyframeTimeout && clearTimeout(data.keyframeTimeout);
-  Bus.off("toggleMascot");
 });
 </script>
 
@@ -549,8 +534,7 @@ onBeforeUnmount(() => {
       backdrop-filter blur(4px)
       cursor pointer
       transition all .25s ease-out
-      border 1px groove rgba(255, 255, 255, .1)
-      box-shadow 1px 1px 1px rgba(0, 0, 0, .1)
+      border 1px groove rgba(255, 255, 255, .15)
       .text
         color rgba(255, 255, 255, 1)
         font-size 24px
@@ -751,23 +735,25 @@ onBeforeUnmount(() => {
   &::after
     display inline-block
     content ''
-    height 64px
-    width 64px
+    height 64PX
+    width 64PX
     background-image url('@/assets/images/sprites/marker.png')
     background-repeat: no-repeat
     background-position: 0 0
     background-size: 100%
     background-position-y: 0
-    -webkit-animation: markerAnimation 3s steps(20) forwards infinite;
-    animation: markerAnimation 3s steps(20) forwards infinite
+    -webkit-animation: markerAnimation 2s steps(20) forwards infinite
+    animation: markerAnimation 2s steps(20) forwards infinite
     -webkit-animation-fill-mode both;
     animation-fill-mode both;
+    transition all linear
     cursor pointer
     transform: scale(0, 0);
-    opacity .6
+    opacity .5
   &:hover
     &::after
       filter brightness(1.2)
+      opacity 1
   &.visible
     display block
     &::after
@@ -779,7 +765,7 @@ onBeforeUnmount(() => {
     background-position: 0 0;
   }
   to {
-    background-position: 0 -1280px;
+    background-position: 0 -1280PX;
   }
 }
 @keyframes markerAnimation {
@@ -787,7 +773,7 @@ onBeforeUnmount(() => {
     background-position: 0 0
   }
   to {
-    background-position: 0 -1280px;
+    background-position: 0 -1280PX;
   }
 }
 
@@ -801,7 +787,6 @@ onBeforeUnmount(() => {
     opacity: 0;
   }
 }
-
 
 @keyframes arrowLeft {
   0% {

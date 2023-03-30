@@ -30,12 +30,11 @@ const props = defineProps({
   position fixed
   background rgba(0, 0, 0, .3)
   border-radius 8px
-  border 1px groove rgba(255, 255, 255, .1)
+  border 1px groove rgba(255, 255, 255, .15)
   -webkit-backdrop-filter blur(4px)
   backdrop-filter blur(4px)
   z-index 11
   overflow hidden
-  box-shadow 1px 1px 1px rgba(0, 0, 0, .1)
   .map
     height 220PX
     width 180PX
