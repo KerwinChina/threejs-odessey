@@ -83,10 +83,9 @@
 
 <script setup>
 /* eslint-disable */
-import { computed, onMounted, reactive, onBeforeUnmount, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onMounted, reactive, onBeforeUnmount } from 'vue';
 import * as THREE from 'three';
-import { Bus, sleep, toast } from '@/utils';
+import { sleep, toast } from '@/utils';
 import { rooms, markers, roomLabels } from '@/views/home/data';
 import { OrbitControls } from '@/utils/OrbitControls.js';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
@@ -96,7 +95,6 @@ import vertex from '@/shaders/cross/vertex.js';
 import Animations from '@/utils/animations';
 import TinyMap from '@/components/TinyMap.vue';
 
-const router = useRouter();
 const data = reactive({
   sceneOrigin: null,
   sceneDestination: null,
@@ -152,7 +150,7 @@ const initScene = () => {
   const sceneFinal = new THREE.Scene();
 
   // 初始化渲染器
-  const canvas = document.querySelector("canvas.webgl");
+  const canvas = document.querySelector('canvas.webgl');
   const renderer = new THREE.WebGLRenderer({ canvas });
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
